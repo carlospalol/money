@@ -7,8 +7,7 @@ NOTES:
 """
 import locale
 import logging
-from decimal import Decimal
-
+import decimal
 
 logger = logging.getLogger(__name__)
 
@@ -17,11 +16,14 @@ class Money(object):
     __hash__ = None
     
     def __init__(self, amount="0", currency=None):
-        self.amount = Decimal(amount)
-        self.currency = currency
+        try:
+            self.amount = decimal.Decimal(amount)
+        except decimal.InvalidOperation:
+            raise TypeError("'{}' could not be converted to Decimal".format(amount))
         
         if currency is None or currency is False:
             raise ValueError("'{}' is not a valid currency".format(currency))
+        self.currency = currency
         
     def __repr__(self):
         return "{} {}".format(self.currency, self.amount)

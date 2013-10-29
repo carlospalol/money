@@ -32,6 +32,10 @@ class TestClass(unittest.TestCase):
         with self.assertRaises(ValueError):
             money = Money('2.22', False)
     
+    def test_invalid_amount(self):
+        with self.assertRaises(TypeError):
+            money = Money('twenty', 'EUR')
+    
     def test_repr(self):
         self.assertEqual(repr(self.m), 'EUR 2.22')
     
