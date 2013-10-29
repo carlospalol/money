@@ -42,7 +42,7 @@ class TestClass(unittest.TestCase):
         self.assertFalse(isinstance(self.m, collections.Hashable))
 
 
-class TestOperators(unittest.TestCase):
+class TestNumericOperations(unittest.TestCase):
     def test_lt(self):
         self.assertTrue(Money('2.219', 'EUR') < Money('2.22', 'EUR'))
         self.assertTrue(Money('-2.22', 'EUR') < Money('2.22', 'EUR'))
