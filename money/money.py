@@ -31,32 +31,32 @@ class Money(object):
             return self.__repr__()
     
     def __lt__(self, other):
-        return self.amount.__lt__(self._get_amount(other))
+        return self.amount.__lt__(self._import_amount(other))
     
     def __le__(self, other):
-        return self.amount.__le__(self._get_amount(other))
+        return self.amount.__le__(self._import_amount(other))
     
     def __eq__(self, other):
-        return self.amount.__eq__(self._get_amount(other))
+        return self.amount.__eq__(self._import_amount(other))
     
     def __ne__(self, other):
         return not self.__eq__(other)
     
     def __gt__(self, other):
-        return self.amount.__gt__(self._get_amount(other))
+        return self.amount.__gt__(self._import_amount(other))
     
     def __ge__(self, other):
-        return self.amount.__ge__(self._get_amount(other))
+        return self.amount.__ge__(self._import_amount(other))
     
     def __bool__(self):
         return bool(self.amount)
     
     def __add__(self, other):
-        amount = self.amount.__add__(self._get_amount(other))
+        amount = self.amount.__add__(self._import_amount(other))
         return self.__class__(amount, self.currency)
     
     def __sub__(self, other):
-        amount = self.amount.__sub__(self._get_amount(other))
+        amount = self.amount.__sub__(self._import_amount(other))
         return self.__class__(amount, self.currency)
     
     def __mul__(self, other):
@@ -112,7 +112,7 @@ class Money(object):
     def __or__(self, other):
         return NotImplemented
     
-    def _get_amount(self, other):
+    def _import_amount(self, other):
         """Return the converted amount of the other, if possible."""
         if isinstance(other, self.__class__):
             return other.convert_to(self.currency).amount
