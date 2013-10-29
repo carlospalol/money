@@ -1,6 +1,7 @@
-import unittest
 import collections
 from decimal import Decimal
+
+import unittest
 
 from money import Money
 
@@ -114,4 +115,34 @@ class TestOperators(unittest.TestCase):
         with self.assertRaises(TypeError):
             Money('3', 'EUR') ** Money('2', 'EUR')
     
+    def test_neg(self):
+        result = -Money('2.22', 'EUR')
+        self.assertEqual(result, Money('-2.22', 'EUR'))
     
+    def test_pos(self):
+        result = +Money('2.22', 'EUR')
+        self.assertEqual(result, Money('2.22', 'EUR'))
+    
+    def test_abs(self):
+        result = abs(Money('-2.22', 'EUR'))
+        self.assertEqual(result, Money('2.22', 'EUR'))
+    
+    def test_int(self):
+        self.assertEqual(int(Money('-2.22', 'EUR')), -2)
+        self.assertEqual(int(Money('2.22', 'EUR')), 2)
+    
+    def test_float(self):
+        self.assertEqual(float(Money('-2.22', 'EUR')), -2.22)
+        self.assertEqual(float(Money('2.22', 'EUR')), 2.22)
+    
+    def test_round(self):
+        self.assertEqual(round(Money('-1.49', 'EUR')), Money('-1', 'EUR'))
+        self.assertEqual(round(Money('1.50', 'EUR')), Money('2', 'EUR'))
+    
+
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+

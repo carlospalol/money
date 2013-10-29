@@ -97,6 +97,24 @@ class Money(object):
         amount = self.amount.__pow__(other)
         return self.__class__(amount, self.currency)
     
+    def __neg__(self):
+        return self.__class__(-self.amount, self.currency)
+    
+    def __pos__(self):
+        return self.__class__(self.amount, self.currency)
+    
+    def __abs__(self):
+        return self.__class__(abs(self.amount), self.currency)
+        
+    def __int__(self):
+        return int(self.amount)
+    
+    def __float__(self):
+        return float(self.amount)
+    
+    def __round__(self, ndigits=0):
+        return self.__class__(round(self.amount, ndigits), self.currency)
+    
     def _import_amount(self, other):
         """Return the converted amount of the other, if possible."""
         if isinstance(other, self.__class__):
