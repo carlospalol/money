@@ -97,21 +97,6 @@ class Money(object):
         amount = self.amount.__pow__(other)
         return self.__class__(amount, self.currency)
     
-    def __lshift__(self, other):
-        return NotImplemented
-    
-    def __rshift__(self, other):
-        return NotImplemented
-    
-    def __and__(self, other):
-        return NotImplemented
-    
-    def __xor__(self, other):
-        return NotImplemented
-    
-    def __or__(self, other):
-        return NotImplemented
-    
     def _import_amount(self, other):
         """Return the converted amount of the other, if possible."""
         if isinstance(other, self.__class__):
