@@ -61,7 +61,7 @@ class Money(object):
     
     def __mul__(self, other):
         if isinstance(other, self.__class__):
-            raise TypeError("multiplication is unsupported between {} objects".format(self.__class__.__name__))
+            raise TypeError("multiplication is unsupported between two '{}' objects".format(self.__class__.__name__))
         amount = self.amount.__mul__(other)
         return self.__class__(amount, self.currency)
     
@@ -81,7 +81,7 @@ class Money(object):
     
     def __mod__(self, other):
         if isinstance(other, self.__class__):
-            raise TypeError("modulo is unsupported between {} objects".format(self.__class__.__name__))
+            raise TypeError("modulo is unsupported between two '{}' objects".format(self.__class__.__name__))
         amount = self.amount.__mod__(other)
         return self.__class__(amount, self.currency)
     
@@ -93,7 +93,7 @@ class Money(object):
     
     def __pow__(self, other):
         if isinstance(other, self.__class__):
-            raise TypeError("power operator is unsupported between {} objects".format(self.__class__.__name__))
+            raise TypeError("power operator is unsupported between two '{}' objects".format(self.__class__.__name__))
         amount = self.amount.__pow__(other)
         return self.__class__(amount, self.currency)
     
@@ -108,7 +108,7 @@ class Money(object):
         if currency == self.currency:
             return self
         else:
-            raise NotImplementedError("Money exchange not implemented yet")
+            raise NotImplementedError("money exchange not implemented yet")
 
 
 
