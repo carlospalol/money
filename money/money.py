@@ -31,58 +31,58 @@ class Money(object):
             return self.__repr__()
     
     def __lt__(self, other):
-        return self.amount < self._get_amount(other)
+        return self.amount.__lt__(self._get_amount(other))
     
     def __le__(self, other):
-        return self.amount <= self._get_amount(other)
+        return self.amount.__le__(self._get_amount(other))
     
     def __eq__(self, other):
-        return self.amount == self._get_amount(other)
+        return self.amount.__eq__(self._get_amount(other))
     
     def __ne__(self, other):
         return not self.__eq__(other)
     
     def __gt__(self, other):
-        return self.amount > self._get_amount(other)
+        return self.amount.__gt__(self._get_amount(other))
     
     def __ge__(self, other):
-        return self.amount >= self._get_amount(other)
+        return self.amount.__ge__(self._get_amount(other))
     
     def __bool__(self):
         return bool(self.amount)
     
     def __add__(self, other):
-        amount = self.amount + self._get_amount(other)
+        amount = self.amount.__add__(self._get_amount(other))
         return self.__class__(amount, self.currency)
     
     def __sub__(self, other):
-        amount = self.amount - self._get_amount(other)
+        amount = self.amount.__sub__(self._get_amount(other))
         return self.__class__(amount, self.currency)
     
     def __mul__(self, other):
         if isinstance(other, self.__class__):
             raise TypeError("multiplication is unsupported between {} objects".format(self.__class__.__name__))
-        amount = self.amount * other
+        amount = self.amount.__mul__(other)
         return self.__class__(amount, self.currency)
     
     def __truediv__(self, other):
         if isinstance(other, self.__class__):
-            return self.amount / other.convert_to(self.currency).amount
+            return self.amount.__truediv__(other.convert_to(self.currency).amount)
         else:
-            amount = self.amount / other
+            amount = self.amount.__truediv__(other)
             return self.__class__(amount, self.currency)
     
     def __floordiv__(self, other):
         if isinstance(other, self.__class__):
-            return self.amount // other.convert_to(self.currency).amount
+            return self.amount.__floordiv__(other.convert_to(self.currency).amount)
         else:
-            amount = self.amount // other
+            amount = self.amount.__floordiv__(other)
             return self.__class__(amount, self.currency)
     
     def __mod__(self, other):
         if isinstance(other, self.__class__):
             raise TypeError("modulo is unsupported between {} objects".format(self.__class__.__name__))
-        amount = self.amount % other
+        amount = self.amount.__mod__(other)
         return self.__class__(amount, self.currency)
     
     def __divmod__(self, other):
@@ -94,7 +94,7 @@ class Money(object):
     def __pow__(self, other):
         if isinstance(other, self.__class__):
             raise TypeError("power operator is unsupported between {} objects".format(self.__class__.__name__))
-        amount = self.amount ** other
+        amount = self.amount.__pow__(other)
         return self.__class__(amount, self.currency)
     
     def __lshift__(self, other):
