@@ -19,7 +19,10 @@ class Money(object):
     def __init__(self, amount="0", currency=None):
         self.amount = Decimal(amount)
         self.currency = currency
-    
+        
+        if currency is None or currency is False:
+            raise ValueError("'{}' is not a valid currency".format(currency))
+        
     def __repr__(self):
         return "{} {}".format(self.currency, self.amount)
     

@@ -10,13 +10,27 @@ class TestClass(unittest.TestCase):
     def setUp(self):
         self.m = Money('2.22', 'EUR')
     
-    def test_new_instance(self):
+    def test_new_instance_int_amount(self):
         self.assertIsInstance(Money(0, 'EUR'), Money)
         self.assertIsInstance(Money(12345, 'EUR'), Money)
+    
+    def test_new_instance_decimal_amount(self):
         self.assertIsInstance(Money(Decimal(12345), 'EUR'), Money)
+    
+    def test_new_instance_float_amount(self):
         self.assertIsInstance(Money(12345.12345, 'EUR'), Money)
+    
+    def test_new_instance_str_amount(self):
         self.assertIsInstance(Money('0', 'EUR'), Money)
         self.assertIsInstance(Money('12345.12345', 'EUR'), Money)
+    
+    def test_invalid_currency_none(self):
+        with self.assertRaises(ValueError):
+            money = Money('2.22', None)
+    
+    def test_invalid_currency_false(self):
+        with self.assertRaises(ValueError):
+            money = Money('2.22', False)
     
     def test_repr(self):
         self.assertEqual(repr(self.m), 'EUR 2.22')
