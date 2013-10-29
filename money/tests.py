@@ -32,6 +32,10 @@ class TestClass(unittest.TestCase):
         with self.assertRaises(ValueError):
             money = Money('2.22', False)
     
+    def test_invalid_currency_empty(self):
+        with self.assertRaises(ValueError):
+            money = Money('2.22', '')
+    
     def test_invalid_amount(self):
         with self.assertRaises(TypeError):
             money = Money('twenty', 'EUR')
@@ -40,12 +44,12 @@ class TestClass(unittest.TestCase):
         self.assertFalse(isinstance(self.m, collections.Hashable))
 
 
-class TestMoneyRepresentations(TestCase):
+class TestMoneyRepresentations(unittest.TestCase):
     def test_repr(self):
-        self.assertEqual(repr(self.m), 'EUR 2.22')
+        self.assertEqual(repr(Money('2.22', 'EUR')), 'EUR 2.22')
     
     def test_str(self):
-        self.assertEqual(str(self.m), 'EUR 2.22')
+        self.assertEqual(str(Money('2.22', 'EUR')), 'EUR 2.22')
 
 
 class TestNumericOperations(unittest.TestCase):
@@ -75,7 +79,8 @@ class TestNumericOperations(unittest.TestCase):
     
     def test_bool(self):
         self.assertTrue(Money('2.22', 'EUR'))
-        self.assertFalse(Money('0', 'EUR'))
+        self.assertTrue(Money('0', 'EUR'))
+        self.assertTrue(Money('-1', 'EUR'))
     
     def test_add(self):
         result = Money('2', 'EUR') + Money('2', 'EUR')
@@ -158,8 +163,6 @@ class TestNumericOperations(unittest.TestCase):
     def test_round(self):
         self.assertEqual(round(Money('-1.49', 'EUR')), Money('-1', 'EUR'))
         self.assertEqual(round(Money('1.50', 'EUR')), Money('2', 'EUR'))
-    
-
 
 
 if __name__ == '__main__':

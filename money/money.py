@@ -1,10 +1,3 @@
-"""
-NOTES:
-* binary operations try to convert currencies
-* Division between two Money objects drops the currency
-* Money objects are not hashable
-* FIXME: bool() behaves just like Decimal. e.g. bool(Money(0, 'EUR')) --> False
-"""
 import locale
 import logging
 import decimal
@@ -21,7 +14,7 @@ class Money(object):
         except decimal.InvalidOperation:
             raise TypeError("'{}' could not be converted to Decimal".format(amount))
         
-        if currency is None or currency is False:
+        if any(currency is x for x in [None, False, '']):
             raise ValueError("'{}' is not a valid currency".format(currency))
         self.currency = currency
         
@@ -54,7 +47,7 @@ class Money(object):
         return self.amount.__ge__(self._import_amount(other))
     
     def __bool__(self):
-        return bool(self.amount)
+        return True
     
     def __add__(self, other):
         amount = self.amount.__add__(self._import_amount(other))
