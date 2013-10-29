@@ -36,14 +36,16 @@ class TestClass(unittest.TestCase):
         with self.assertRaises(TypeError):
             money = Money('twenty', 'EUR')
     
+    def test_not_hashable(self):
+        self.assertFalse(isinstance(self.m, collections.Hashable))
+
+
+class TestMoneyRepresentations(TestCase):
     def test_repr(self):
         self.assertEqual(repr(self.m), 'EUR 2.22')
     
     def test_str(self):
         self.assertEqual(str(self.m), 'EUR 2.22')
-    
-    def test_not_hashable(self):
-        self.assertFalse(isinstance(self.m, collections.Hashable))
 
 
 class TestNumericOperations(unittest.TestCase):
