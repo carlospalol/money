@@ -14,7 +14,7 @@ class Money(object):
         except decimal.InvalidOperation:
             raise TypeError("'{}' could not be converted to Decimal".format(amount))
         
-        if any(currency is x for x in [None, False, '']):
+        if currency in [None, False, '']:
             raise ValueError("'{}' is not a valid currency".format(currency))
         self.currency = currency
         
