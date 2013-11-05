@@ -24,7 +24,7 @@ class Money(object):
     def __str__(self):
         try:
             amount = locale.currency(self.amount, symbol=False, grouping=True, international=False)
-            return "{} {}".format(amount, self.currency)
+            return "{} {}".format(self.currency, amount)
         except ValueError:
             return self.__repr__()
     
