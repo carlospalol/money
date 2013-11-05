@@ -6,10 +6,7 @@ import unittest
 from money import Money
 
 
-class TestClass(unittest.TestCase):
-    def setUp(self):
-        self.m = Money('2.22', 'EUR')
-    
+class TestClass(unittest.TestCase):    
     def test_new_instance_int_amount(self):
         self.assertIsInstance(Money(0, 'EUR'), Money)
         self.assertIsInstance(Money(12345, 'EUR'), Money)
@@ -41,7 +38,8 @@ class TestClass(unittest.TestCase):
             money = Money('twenty', 'EUR')
     
     def test_not_hashable(self):
-        self.assertFalse(isinstance(self.m, collections.Hashable))
+        money = Money('2.22', 'EUR')
+        self.assertFalse(isinstance(money, collections.Hashable))
 
 
 class TestMoneyRepresentations(unittest.TestCase):
