@@ -12,10 +12,9 @@ class Money(object):
         try:
             self.amount = decimal.Decimal(amount)
         except decimal.InvalidOperation:
-            raise TypeError("'{}' could not be converted to Decimal".format(amount))
-        
+            raise ValueError("invalid amount value for Decimal(): '{}'".format(amount)) from None
         if currency in [None, False, '']:
-            raise ValueError("'{}' is not a valid currency".format(currency))
+            raise ValueError("invalid currency value: '{}'".format(currency))
         self.currency = currency
         
     def __repr__(self):
@@ -125,8 +124,14 @@ class Money(object):
             return self
         else:
             raise NotImplementedError("money exchange not implemented yet")
-
-
+    
+    @classmethod
+    def loads(cls, s):
+        try:
+            currency, amount = s.strip().split(' ')
+            return cls(amount, currency)
+        except ValueError as err:
+            raise ValueError("failed to parse '{}' into Money: {}".format(s, err)) from None
 
 
 

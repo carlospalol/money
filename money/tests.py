@@ -6,7 +6,7 @@ import unittest
 from money import Money
 
 
-class TestClass(unittest.TestCase):    
+class TestClass(unittest.TestCase):
     def test_new_instance_int_amount(self):
         self.assertIsInstance(Money(0, 'EUR'), Money)
         self.assertIsInstance(Money(12345, 'EUR'), Money)
@@ -34,7 +34,7 @@ class TestClass(unittest.TestCase):
             money = Money('2.22', '')
     
     def test_invalid_amount(self):
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             money = Money('twenty', 'EUR')
     
     def test_not_hashable(self):
@@ -48,6 +48,23 @@ class TestMoneyRepresentations(unittest.TestCase):
     
     def test_str(self):
         self.assertEqual(str(Money('2.22', 'EUR')), 'EUR 2.22')
+
+
+class TestMoneyParser(unittest.TestCase):
+    def test_loads_valid(self):
+        self.assertEqual(Money.loads('EUR 2.22'), Money('2.22', 'EUR'))
+    
+    def test_loads_missing_currency(self):
+        with self.assertRaises(ValueError):
+            money = Money.loads('2.22')
+    
+    def test_loads_reversed_order(self):
+        with self.assertRaises(ValueError):
+            money = Money.loads('2.22 EUR')
+    
+    def test_loads_empty(self):
+        with self.assertRaises(ValueError):
+            money = Money.loads('')
 
 
 class TestNumericOperations(unittest.TestCase):
