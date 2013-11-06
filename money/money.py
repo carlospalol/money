@@ -127,6 +127,7 @@ class Money(object):
     
     @classmethod
     def loads(cls, s):
+        """Parse and return a Money object from a string representation."""
         try:
             currency, amount = s.strip().split(' ')
             return cls(amount, currency)
