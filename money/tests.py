@@ -178,6 +178,7 @@ class TestNumericOperations(unittest.TestCase):
     def test_round(self):
         self.assertEqual(round(Money('-1.49', 'EUR')), Money('-1', 'EUR'))
         self.assertEqual(round(Money('1.50', 'EUR')), Money('2', 'EUR'))
+        self.assertEqual(round(Money('1.234', 'EUR'), 2), Money('1.23', 'EUR'))
 
 
 if __name__ == '__main__':
