@@ -21,11 +21,7 @@ class Money(object):
         return "{} {}".format(self.currency, self.amount)
     
     def __str__(self):
-        try:
-            amount = locale.currency(self.amount, symbol=False, grouping=True, international=False)
-            return "{} {}".format(self.currency, amount)
-        except ValueError:
-            return self.__repr__()
+        return "{} {:,.2f}".format(self.currency, self.amount)
     
     def __lt__(self, other):
         return self.amount.__lt__(self._import_amount(other))

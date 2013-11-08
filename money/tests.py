@@ -44,10 +44,10 @@ class TestClass(unittest.TestCase):
 
 class TestMoneyRepresentations(unittest.TestCase):
     def test_repr(self):
-        self.assertEqual(repr(Money('2.22', 'EUR')), 'EUR 2.22')
+        self.assertEqual(repr(Money('1234.567', 'EUR')), 'EUR 1234.567')
     
     def test_str(self):
-        self.assertEqual(str(Money('2.22', 'EUR')), 'EUR 2.22')
+        self.assertEqual(str(Money('1234.567', 'EUR')), 'EUR 1,234.57')
 
 
 class TestMoneyParser(unittest.TestCase):
