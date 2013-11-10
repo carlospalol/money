@@ -50,6 +50,36 @@ class TestMoneyRepresentations(unittest.TestCase):
         self.assertEqual(str(Money('1234.567', 'EUR')), 'EUR 1,234.57')
 
 
+class TestMoneyFormatting(unittest.TestCase):
+    def setUp(self):
+        self.money = Money('-1234.567', 'USD')
+    
+    def test_custom_format_padding(self):
+        self.assertEqual(self.money.format('en_US', '¤000000.00'), '-$001234.57')
+    
+    def test_custom_format_custom_negative(self):
+        self.assertEqual(self.money.format('en_US', '¤#,##0.00;<¤#,##0.00>'), '<$1,234.57>')
+    
+    def test_custom_format_grouping(self):
+        self.assertEqual(self.money.format('en_US', '¤#,##0.00'), '-$1,234.57')
+        self.assertEqual(self.money.format('de_DE', '#,##0.00 ¤'), '-1.234,57 $')
+        self.assertEqual(self.money.format('en_US', '¤0.00'), '-$1234.57')
+        self.assertEqual(self.money.format('de_DE', '0.00 ¤'), '-1234,57 $')
+    
+    def test_custom_format_decimals(self):
+        self.assertEqual(self.money.format('en_US', '¤0.000'), '-$1234.567')
+        self.assertEqual(self.money.format('en_US', '¤0'), '-$1235')
+    
+    def test_auto_format_locales(self):
+        self.assertEqual(self.money.format('en_US'), '($1,234.57)')
+        self.assertEqual(self.money.format('de_DE'), '-1.234,57\xa0$')
+        self.assertEqual(self.money.format('es_CO'), '-1.234,57\xa0US$')
+    
+    def test_auto_format_locales_alias(self):
+        self.assertEqual(self.money.format('en'), self.money.format('en_US'))
+        self.assertEqual(self.money.format('de'), self.money.format('de_DE'))
+
+
 class TestMoneyParser(unittest.TestCase):
     def test_loads_valid(self):
         self.assertEqual(Money.loads('EUR 2.22'), Money('2.22', 'EUR'))

@@ -3,6 +3,14 @@ import logging
 import decimal
 
 logger = logging.getLogger(__name__)
+_babel_available = False
+
+try:
+    import babel
+    import babel.numbers
+    _babel_available = True
+except ImportError:
+    pass
 
 
 class Money(object):
@@ -120,6 +128,42 @@ class Money(object):
             return self
         else:
             raise NotImplementedError("money exchange not implemented yet")
+    
+    def format(self, locale=None, pattern=None):
+        """
+        Return a locale-aware, currency-formatted string.
+        
+        This method is a wrapper of Babel's babel.numbers.format_currency().
+        
+        A specific locale identifier (language[_territory]) can be passed,
+        otherwise the system's default locale will be used. A custom formatting
+        pattern of the form "¤#,##0.00;(¤#,##0.00)" (positive[;negative]) can
+        also be passed, otherwise it will be determined from the locale and the
+        CLDR (Unicode Common Locale Data Repository) included with Babel.
+        
+        >>> m = Money('1234.567', 'EUR')
+        >>> m.format() # assuming the system's locale is 'en_US'
+        €1,234.57
+        >>> m.format('de_DE') # German formatting
+        1.234,57 €
+        >>> m.format('de', '#,##0 ¤') # German formatting (short), no cents
+        1.235 €
+        >>> m.format(pattern='#,##0.00 ¤¤¤') # Default locale, full name
+        1,235.57 euro
+        
+        Learn more about this formatting syntaxis at:
+        http://www.unicode.org/reports/tr35/tr35-numbers.html
+        """
+        if _babel_available:
+            if not locale:
+                locale = babel.default_locale('LC_NUMERIC')
+            locale = babel.Locale.parse(locale)
+            if not pattern:
+                pattern = locale.currency_formats.get(pattern)
+            pattern = babel.numbers.parse_pattern(pattern)
+            return pattern.apply(self.amount, locale, currency=self.currency)
+        else:
+            raise NotImplementedError("Money formatting requires Babel (https://pypi.python.org/pypi/Babel)")
     
     @classmethod
     def loads(cls, s):
