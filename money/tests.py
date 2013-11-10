@@ -101,10 +101,18 @@ class TestNumericOperations(unittest.TestCase):
         self.assertTrue(Money('2.219', 'EUR') < Money('2.22', 'EUR'))
         self.assertTrue(Money('-2.22', 'EUR') < Money('2.22', 'EUR'))
     
+    def test_lt_none(self):
+        with self.assertRaises(TypeError):
+            Money(0, 'EUR') < None
+    
     def test_le(self):
         self.assertTrue(Money('2.219', 'EUR') <= Money('2.22', 'EUR'))
         self.assertTrue(Money('-2.22', 'EUR') <= Money('2.22', 'EUR'))
         self.assertTrue(Money('2.220', 'EUR') <= Money('2.22', 'EUR'))
+    
+    def test_le_none(self):
+        with self.assertRaises(TypeError):
+            Money(0, 'EUR') <= None
     
     def test_eq(self):
         self.assertTrue(Money('2.220', 'EUR') == Money('2.22', 'EUR'))
@@ -112,14 +120,25 @@ class TestNumericOperations(unittest.TestCase):
     def test_nq(self):
         self.assertTrue(Money('2.219', 'EUR') != Money('2.22', 'EUR'))
     
+    def test_nq_none(self):
+        self.assertNotEqual(Money(0, 'EUR'), None)
+    
     def test_gt(self):
         self.assertTrue(Money('2.22', 'EUR') > Money('2.219', 'EUR'))
         self.assertTrue(Money('2.22', 'EUR') > Money('-2.22', 'EUR'))
+    
+    def test_gt_none(self):
+        with self.assertRaises(TypeError):
+            Money(0, 'EUR') > None
     
     def test_ge(self):
         self.assertTrue(Money('2.22', 'EUR') > Money('2.219', 'EUR'))
         self.assertTrue(Money('2.22', 'EUR') > Money('-2.22', 'EUR'))
         self.assertTrue(Money('2.220', 'EUR') == Money('2.22', 'EUR'))
+    
+    def test_ge_none(self):
+        with self.assertRaises(TypeError):
+            Money(0, 'EUR') >= None
     
     def test_bool(self):
         self.assertTrue(Money('2.22', 'EUR'))
@@ -130,9 +149,17 @@ class TestNumericOperations(unittest.TestCase):
         result = Money('2', 'EUR') + Money('2', 'EUR')
         self.assertEqual(result, Money('4', 'EUR'))
     
+    def test_add_none(self):
+        with self.assertRaises(TypeError):
+            Money(0, 'EUR') + None
+    
     def test_sub(self):
         result = Money('2', 'EUR') - Money('2', 'EUR')
         self.assertEqual(result, Money('0', 'EUR'))
+    
+    def test_sub_none(self):
+        with self.assertRaises(TypeError):
+            Money(0, 'EUR') - None
     
     def test_mul_number(self):
         result = Money('2', 'EUR') * 2
@@ -142,6 +169,10 @@ class TestNumericOperations(unittest.TestCase):
         with self.assertRaises(TypeError):
             Money('2', 'EUR') * Money('2', 'EUR')
     
+    def test_mul_none(self):
+        with self.assertRaises(TypeError):
+            Money(0, 'EUR') * None
+    
     def test_truediv_number(self):
         result = Money('2.22', 'EUR') / 2
         self.assertEqual(result, Money('1.11', 'EUR'))
@@ -149,6 +180,10 @@ class TestNumericOperations(unittest.TestCase):
     def test_truediv_money(self):
         result = Money('2', 'EUR') / Money('2', 'EUR')
         self.assertEqual(result, Decimal('1'))
+    
+    def test_truediv_none(self):
+        with self.assertRaises(TypeError):
+            Money(0, 'EUR') / None
     
     def test_floordiv_number(self):
         result = Money('2.22', 'EUR') // 2
@@ -158,6 +193,10 @@ class TestNumericOperations(unittest.TestCase):
         result = Money('2.22', 'EUR') // Money('2', 'EUR')
         self.assertEqual(result, Decimal('1'))
     
+    def test_floordiv_none(self):
+        with self.assertRaises(TypeError):
+            Money(0, 'EUR') // None
+    
     def test_mod_number(self):
         result = Money('2.22', 'EUR') % 2
         self.assertEqual(result, Money('0.22', 'EUR'))
@@ -165,6 +204,10 @@ class TestNumericOperations(unittest.TestCase):
     def test_mod_money(self):
         with self.assertRaises(TypeError):
             Money('2.22', 'EUR') % Money('2', 'EUR')
+    
+    def test_mod_none(self):
+        with self.assertRaises(TypeError):
+            Money(0, 'EUR') % None
     
     def test_divmod_number(self):
         whole, remainder = divmod(Money('2.22', 'EUR'), 2)
@@ -176,6 +219,10 @@ class TestNumericOperations(unittest.TestCase):
         self.assertEqual(whole, Decimal('1'))
         self.assertEqual(remainder, Decimal('0.22'))
     
+    def test_divmod_none(self):
+        with self.assertRaises(TypeError):
+            divmod(Money(0, 'EUR'), None)
+    
     def test_pow_number(self):
         result = Money('3', 'EUR') ** 2
         self.assertEqual(result, Money('9', 'EUR'))
@@ -183,6 +230,10 @@ class TestNumericOperations(unittest.TestCase):
     def test_pow_money(self):
         with self.assertRaises(TypeError):
             Money('3', 'EUR') ** Money('2', 'EUR')
+    
+    def test_pow_none(self):
+        with self.assertRaises(TypeError):
+            Money(0, 'EUR') ** None
     
     def test_neg(self):
         result = -Money('2.22', 'EUR')
