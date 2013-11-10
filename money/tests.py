@@ -301,6 +301,20 @@ class TestNumericOperations(unittest.TestCase):
         self.assertEqual(round(Money('1.234', 'EUR'), 2), Money('1.23', 'EUR'))
 
 
+class TestUnaryOperationsReturnNewObject(unittest.TestCase):
+    def setUp(self):
+        self.money = Money(2, 'XXX')
+    
+    def test_pos(self):
+        self.assertIsNot(+self.money, self.money)
+    
+    def test_abs(self):
+        self.assertIsNot(abs(self.money), self.money)
+    
+    def test_round(self):
+        self.assertIsNot(round(self.money), self.money)
+
+
 if __name__ == '__main__':
     unittest.main()
 
