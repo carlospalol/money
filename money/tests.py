@@ -97,7 +97,12 @@ class TestMoneyParser(unittest.TestCase):
 
 
 class TestNumericOperations(unittest.TestCase):
-    def test_lt(self):
+    def test_lt_number(self):
+        self.assertTrue(Money('2.22', 'EUR') < 3)
+        self.assertTrue(Money('2.22', 'EUR') < 3.0)
+        self.assertTrue(Money('2.22', 'EUR') < Decimal(3))
+    
+    def test_lt_money(self):
         self.assertTrue(Money('2.219', 'EUR') < Money('2.22', 'EUR'))
         self.assertTrue(Money('-2.22', 'EUR') < Money('2.22', 'EUR'))
     
@@ -105,7 +110,12 @@ class TestNumericOperations(unittest.TestCase):
         with self.assertRaises(TypeError):
             Money(0, 'EUR') < None
     
-    def test_le(self):
+    def test_le_number(self):
+        self.assertTrue(Money('2.219', 'EUR') <= 3)
+        self.assertTrue(Money('2.219', 'EUR') <= 3.0)
+        self.assertTrue(Money('-2.22', 'EUR') <= Decimal('3'))
+    
+    def test_le_money(self):
         self.assertTrue(Money('2.219', 'EUR') <= Money('2.22', 'EUR'))
         self.assertTrue(Money('-2.22', 'EUR') <= Money('2.22', 'EUR'))
         self.assertTrue(Money('2.220', 'EUR') <= Money('2.22', 'EUR'))
@@ -114,16 +124,28 @@ class TestNumericOperations(unittest.TestCase):
         with self.assertRaises(TypeError):
             Money(0, 'EUR') <= None
     
-    def test_eq(self):
+    def test_eq_number(self):
+        self.assertTrue(Money('2', 'EUR') == 2)
+        self.assertTrue(Money('2', 'EUR') == Decimal(2))
+    
+    def test_eq_money(self):
         self.assertTrue(Money('2.220', 'EUR') == Money('2.22', 'EUR'))
     
-    def test_nq(self):
+    def test_nq_number(self):
+        self.assertTrue(Money('2.219', 'EUR') != 3)
+        self.assertTrue(Money('2.219', 'EUR') != Decimal('2.22'))
+    
+    def test_nq_money(self):
         self.assertTrue(Money('2.219', 'EUR') != Money('2.22', 'EUR'))
     
     def test_nq_none(self):
         self.assertNotEqual(Money(0, 'EUR'), None)
     
-    def test_gt(self):
+    def test_gt_number(self):
+        self.assertTrue(Money('2.22', 'EUR') > 2)
+        self.assertTrue(Money('2.22', 'EUR') > Decimal('2'))
+    
+    def test_gt_money(self):
         self.assertTrue(Money('2.22', 'EUR') > Money('2.219', 'EUR'))
         self.assertTrue(Money('2.22', 'EUR') > Money('-2.22', 'EUR'))
     
@@ -131,7 +153,13 @@ class TestNumericOperations(unittest.TestCase):
         with self.assertRaises(TypeError):
             Money(0, 'EUR') > None
     
-    def test_ge(self):
+    def test_ge_number(self):
+        self.assertTrue(Money('2', 'EUR') >= 1)
+        self.assertTrue(Money('2', 'EUR') >= 2)
+        self.assertTrue(Money('2', 'EUR') >= Decimal('1'))
+        self.assertTrue(Money('2', 'EUR') >= Decimal('2'))
+    
+    def test_ge_money(self):
         self.assertTrue(Money('2.22', 'EUR') > Money('2.219', 'EUR'))
         self.assertTrue(Money('2.22', 'EUR') > Money('-2.22', 'EUR'))
         self.assertTrue(Money('2.220', 'EUR') == Money('2.22', 'EUR'))
@@ -145,7 +173,13 @@ class TestNumericOperations(unittest.TestCase):
         self.assertTrue(Money('0', 'EUR'))
         self.assertTrue(Money('-1', 'EUR'))
     
-    def test_add(self):
+    def test_add_number(self):
+        result = Money('2', 'EUR') + 2
+        self.assertEqual(result, Money('4', 'EUR'))
+        result = Money('2', 'EUR') + Decimal('2')
+        self.assertEqual(result, Money('4', 'EUR'))
+    
+    def test_add_money(self):
         result = Money('2', 'EUR') + Money('2', 'EUR')
         self.assertEqual(result, Money('4', 'EUR'))
     
@@ -153,7 +187,13 @@ class TestNumericOperations(unittest.TestCase):
         with self.assertRaises(TypeError):
             Money(0, 'EUR') + None
     
-    def test_sub(self):
+    def test_sub_number(self):
+        result = Money('2', 'EUR') - 2
+        self.assertEqual(result, Money('0', 'EUR'))
+        result = Money('2', 'EUR') - Decimal(2)
+        self.assertEqual(result, Money('0', 'EUR'))
+    
+    def test_sub_money(self):
         result = Money('2', 'EUR') - Money('2', 'EUR')
         self.assertEqual(result, Money('0', 'EUR'))
     
