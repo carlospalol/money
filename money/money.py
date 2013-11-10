@@ -2,13 +2,14 @@ import locale
 import logging
 import decimal
 
+
 logger = logging.getLogger(__name__)
-_babel_available = False
+BABEL_AVAILABLE = False
 
 try:
     import babel
     import babel.numbers
-    _babel_available = True
+    BABEL_AVAILABLE = True
 except ImportError:
     pass
 
@@ -154,7 +155,7 @@ class Money(object):
         Learn more about this formatting syntaxis at:
         http://www.unicode.org/reports/tr35/tr35-numbers.html
         """
-        if _babel_available:
+        if BABEL_AVAILABLE:
             if not locale:
                 locale = babel.default_locale('LC_NUMERIC')
             locale = babel.Locale.parse(locale)

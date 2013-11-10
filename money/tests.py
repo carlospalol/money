@@ -1,9 +1,7 @@
+import unittest
 import collections
 from decimal import Decimal
-
-import unittest
-
-from money import Money
+from money.money import Money, BABEL_AVAILABLE
 
 
 class TestClass(unittest.TestCase):
@@ -50,6 +48,7 @@ class TestMoneyRepresentations(unittest.TestCase):
         self.assertEqual(str(Money('1234.567', 'EUR')), 'EUR 1,234.57')
 
 
+@unittest.skipUnless(BABEL_AVAILABLE, "requires Babel")
 class TestMoneyFormatting(unittest.TestCase):
     def setUp(self):
         self.money = Money('-1234.567', 'USD')
