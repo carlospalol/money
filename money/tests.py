@@ -160,9 +160,9 @@ class TestNumericOperations(unittest.TestCase):
         self.assertTrue(Money('2', 'EUR') >= Decimal('2'))
     
     def test_ge_money(self):
-        self.assertTrue(Money('2.22', 'EUR') > Money('2.219', 'EUR'))
-        self.assertTrue(Money('2.22', 'EUR') > Money('-2.22', 'EUR'))
-        self.assertTrue(Money('2.220', 'EUR') == Money('2.22', 'EUR'))
+        self.assertTrue(Money('2.22', 'EUR') >= Money('2.219', 'EUR'))
+        self.assertTrue(Money('2.22', 'EUR') >= Money('-2.22', 'EUR'))
+        self.assertTrue(Money('2.22', 'EUR') >= Money('2.22', 'EUR'))
     
     def test_ge_none(self):
         with self.assertRaises(TypeError):
