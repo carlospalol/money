@@ -1,7 +1,9 @@
 import unittest
 import collections
 from decimal import Decimal
-from money.money import Money, BABEL_AVAILABLE
+
+from money import Money, xrates
+from money.money import BABEL_AVAILABLE
 
 
 class TestClass(unittest.TestCase):
@@ -328,7 +330,66 @@ class TestUnaryOperationsReturnNewObject(unittest.TestCase):
         self.assertIsNot(round(self.money), self.money)
 
 
+class TestExchangeRatesBackendRegistration(unittest.TestCase):
+    def setUp(self):
+        xrates.unregister_backend()
+    
+    def test_register(self):
+        self.assertFalse(xrates)
+        self.assertIsNone(xrates.backend_name)
+        xrates.register_backend('money.exchange.SimpleBackend')
+        self.assertEqual(xrates.backend_name, 'SimpleBackend')
+    
+    def test_unregister(self):
+        xrates.register_backend('money.exchange.SimpleBackend')
+        self.assertEqual(xrates.backend_name, 'SimpleBackend')
+        xrates.unregister_backend()
+        self.assertFalse(xrates)
+        self.assertIsNone(xrates.backend_name)
+    
+    def test_unavailable_backend(self):
+        with self.assertRaises(NotImplementedError):
+            Money(1, 'EUR') > Money(1, 'USD')
+
+
+class TestExchangeRatesSimpleBackend(unittest.TestCase):
+    def setUp(self):
+        xrates.register_backend('money.exchange.SimpleBackend')
+    
+    def set_rates(self):
+        xrates.base = 'USD'
+        xrates.setrate('ZZZ', Decimal('1.333'))
+        xrates.setrate('YYY', Decimal('2.222'))
+    
+    def test_unavailable_rate(self):
+        self.assertIsNone(xrates.rate('ZZZ'))
+    
+    def test_unavailable_quotation(self):
+        self.assertIsNone(xrates.quotation('ZZZ', 'YYY'))
+    
+    def test_missing_base_error(self):
+        with self.assertRaisesRegex(Exception, 'you must set the base'):
+            xrates.setrate('ZZZ', Decimal(1.5))
+    
+    def test_base(self):
+        self.set_rates()
+        self.assertEqual(xrates.base, 'USD')
+    
+    def test_rate(self):
+        self.set_rates()
+        self.assertEqual(xrates.rate('ZZZ'), Decimal('1.333'))
+        self.assertEqual(xrates.rate('YYY'), Decimal('2.222'))
+    
+    def test_quotation(self):
+        self.set_rates()
+        self.assertEqual(xrates.quotation('USD', 'ZZZ'), Decimal('1.333'))
+        self.assertEqual(xrates.quotation('USD', 'YYY'), Decimal('2.222'))
+        self.assertAlmostEqual(xrates.quotation('ZZZ', 'YYY'), Decimal('1.66691'), places=4)
+
+
 if __name__ == '__main__':
     unittest.main()
+
+
 
 
