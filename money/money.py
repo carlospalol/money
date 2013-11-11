@@ -1,10 +1,7 @@
-import locale
-import logging
 import decimal
 import re
 
 
-logger = logging.getLogger(__name__)
 BABEL_AVAILABLE = False
 REGEX_CURRENCY_CODE = re.compile("^[A-Z]{3}$")
 
