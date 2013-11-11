@@ -136,21 +136,20 @@ class TestNumericOperations(unittest.TestCase):
         with self.assertRaises(TypeError):
             Money(0, 'XXX') <= None
     
-    def test_eq_number(self):
-        self.assertTrue(Money('2', 'XXX') == 2)
-        self.assertTrue(Money('2', 'XXX') == Decimal(2))
+    def test_eq(self):
+        self.assertEqual(Money('2', 'XXX'), Money('2', 'XXX'))
+        self.assertEqual(Money('2.22000', 'XXX'), Money('2.22', 'XXX'))
     
-    def test_eq_money(self):
-        self.assertTrue(Money('2.220', 'XXX') == Money('2.22', 'XXX'))
+    def test_ne(self):
+        self.assertNotEqual(Money('0', 'XXX'), 0)
+        self.assertNotEqual(Money('2', 'XXX'), 2)
+        self.assertNotEqual(Money('2', 'XXX'), 'two')
     
-    def test_nq_number(self):
-        self.assertTrue(Money('2.219', 'XXX') != 3)
-        self.assertTrue(Money('2.219', 'XXX') != Decimal('2.22'))
+    def test_ne_money(self):
+        self.assertNotEqual(Money('2', 'XXX'), Money('3', 'XXX'))
+        self.assertNotEqual(Money('2', 'XXX'), Money('2', 'YYY'))
     
-    def test_nq_money(self):
-        self.assertTrue(Money('2.219', 'XXX') != Money('2.22', 'XXX'))
-    
-    def test_nq_none(self):
+    def test_ne_none(self):
         self.assertNotEqual(Money(0, 'XXX'), None)
     
     def test_gt_number(self):

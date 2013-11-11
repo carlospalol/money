@@ -14,8 +14,6 @@ except ImportError:
 
 
 class Money(object):
-    __hash__ = None
-    
     def __init__(self, amount="0", currency=None):
         try:
             self.amount = decimal.Decimal(amount)
@@ -40,7 +38,9 @@ class Money(object):
         return self.amount <= self._import_amount(other)
     
     def __eq__(self, other):
-        return self.amount == self._import_amount(other)
+        if isinstance(other, self.__class__):
+            return self.amount == other.amount and self.currency == other.currency
+        return False
     
     def __ne__(self, other):
         return not self == other
