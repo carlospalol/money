@@ -52,7 +52,7 @@ class Money(object):
         return self.amount >= self._import_amount(other)
     
     def __bool__(self):
-        return True
+        return bool(self.amount)
     
     def __add__(self, other):
         amount = self.amount + self._import_amount(other)

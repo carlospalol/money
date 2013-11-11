@@ -180,10 +180,12 @@ class TestNumericOperations(unittest.TestCase):
         with self.assertRaises(TypeError):
             Money(0, 'XXX') >= None
     
-    def test_bool(self):
+    def test_bool_true(self):
         self.assertTrue(Money('2.22', 'XXX'))
-        self.assertTrue(Money('0', 'XXX'))
         self.assertTrue(Money('-1', 'XXX'))
+    
+    def test_bool_false(self):
+        self.assertFalse(Money('0', 'XXX'))
     
     def test_add_number(self):
         result = Money('2', 'XXX') + 2
