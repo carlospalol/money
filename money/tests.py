@@ -31,6 +31,18 @@ class TestClass(unittest.TestCase):
         with self.assertRaises(ValueError):
             money = Money('2.22', '')
     
+    def test_invalid_currency_code(self):
+        with self.assertRaises(ValueError):
+            money = Money('2.22', 'XX')
+        with self.assertRaises(ValueError):
+            money = Money('2.22', '123')
+        with self.assertRaises(ValueError):
+            money = Money('2.22', 'xxx')
+        with self.assertRaises(ValueError):
+            money = Money('2.22', '$')
+        with self.assertRaises(ValueError):
+            money = Money('2.22', 'US$')
+    
     def test_invalid_amount(self):
         with self.assertRaises(ValueError):
             money = Money('twenty', 'XXX')

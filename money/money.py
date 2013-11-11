@@ -1,10 +1,12 @@
 import locale
 import logging
 import decimal
+import re
 
 
 logger = logging.getLogger(__name__)
 BABEL_AVAILABLE = False
+REGEX_CURRENCY_CODE = re.compile("^[A-Z]{3}$")
 
 try:
     import babel
@@ -24,6 +26,8 @@ class Money(object):
             raise ValueError("invalid amount value for Decimal(): '{}'".format(amount)) from None
         if currency in [None, False, '']:
             raise ValueError("invalid currency value: '{}'".format(currency))
+        elif not REGEX_CURRENCY_CODE.match(currency):
+            raise ValueError("currency not in ISO 4217 format: '{}'".format(currency))
         self.currency = currency
         
     def __repr__(self):
