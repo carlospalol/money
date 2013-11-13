@@ -109,6 +109,10 @@ class TestSimpleBackend(BackendTestBase, unittest.TestCase):
         self.load_testing_data()
         self.assertEqual(Money('10', 'AAA').to('BBB'), Money('40', 'BBB'))
         self.assertEqual(Money('10', 'BBB').to('AAA'), Money('2.5', 'AAA'))
+    
+    def test_base_not_set_warning(self):
+        with self.assertRaises(Warning):
+            xrates.setrate('AAA', Decimal('2'))
 
 
 class ConversionMixin(object):
