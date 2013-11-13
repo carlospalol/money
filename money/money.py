@@ -54,7 +54,7 @@ class Money(object):
     
     def __eq__(self, other):
         if isinstance(other, Money):
-            return ((self.amount == other.amount) and 
+            return ((self.amount == other.amount) and
                     (self.currency == other.currency))
         return False
     

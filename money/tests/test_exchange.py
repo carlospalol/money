@@ -56,7 +56,6 @@ class TestExchangeRatesSetup(unittest.TestCase):
         self.assertEqual(another.rate('AAA'), Decimal('100'))
 
 
-
 class BackendTestBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def test_base_property(self):

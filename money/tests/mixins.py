@@ -62,7 +62,6 @@ class RepresentationsMixin(object):
         self.assertEqual(str(self.MoneyClass('1234.567', 'XXX')), 'XXX 1,234.57')
 
 
-
 class FormattingMixin(object):
     def setUp(self):
         self.money = self.MoneyClass('-1234.567', 'USD')

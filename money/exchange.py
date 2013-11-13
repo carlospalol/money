@@ -44,8 +44,7 @@ class SimpleBackend(BackendBase):
     
     def setrate(self, currency, rate):
         if not self.base:
-            raise Warning("you must set the base first: "
-                            "xrates.base = currency")
+            raise Warning("set the base first: xrates.base = currency")
         self._rates[currency] = rate
     
     def rate(self, currency):
