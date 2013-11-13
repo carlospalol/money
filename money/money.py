@@ -2,7 +2,7 @@ import decimal
 import re
 
 from .exchange import xrates
-from .exceptions import CurrencyMismatch
+from .exceptions import CurrencyMismatch, CurrencyExchangeFailed
 
 
 __all__ = ['Money', 'XMoney']
@@ -162,12 +162,15 @@ class Money(object):
         return self.__class__(round(self.amount, ndigits), self.currency)
     
     def to(self, currency):
-        """Return a new Money object converted to a currency or self"""
+        """Return equivalent money object in another currency"""
         if currency == self.currency:
             return self
         rate = xrates.quotation(self.currency, currency)
+        if rate is None:
+            raise CurrencyExchangeFailed(xrates.backend_name,
+                                         self.currency, currency)
         amount = self.amount * rate
-        return self.__class__(amount, self.currency)
+        return self.__class__(amount, currency)
     
     def format(self, locale=None, pattern=None):
         """

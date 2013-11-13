@@ -2,7 +2,7 @@ import abc
 import decimal
 import importlib
 
-from .exceptions import ExchangeRatesUnavailable
+from .exceptions import CurrencyExchangeUnavailable
 
 
 __all__ = ['xrates']
@@ -17,13 +17,13 @@ class BackendBase(metaclass=abc.ABCMeta):
     
     @abc.abstractmethod
     def rate(self, currency):
-        """Return quotation between the base and a price currency"""
+        """Return quotation between the base and another currency"""
         return None
     
-    def quotation(self, from_currency, to_currency):
-        """Return quotation between two currencies"""
-        a = self.rate(from_currency)
-        b = self.rate(to_currency)
+    def quotation(self, origin, target):
+        """Return quotation between two currencies (origin, target)"""
+        a = self.rate(origin)
+        b = self.rate(target)
         if a and b:
             return b / a
         return None
@@ -62,6 +62,7 @@ class ExchangeRates(object):
         return bool(self._backend)
     
     def register_backend(self, pythonpath='money.exchange.SimpleBackend'):
+        """Install an exchange rates backend using a python path string"""
         path, name = pythonpath.rsplit('.', 1)
         module = importlib.import_module(path)
         backend = getattr(module, name)
@@ -71,34 +72,39 @@ class ExchangeRates(object):
         self._backend = backend()
     
     def unregister_backend(self):
+        """Uninstall any exchange rates backend"""
         self._backend = None
     
     @property
     def backend_name(self):
+        """Return the class name of the currently installed backend or None"""
         if not self._backend:
             return None
         return self._backend.__class__.__name__
     
     @property
     def base(self):
+        """Return the base currency"""
         if not self._backend:
-            raise ExchangeRatesUnavailable()
+            raise CurrencyExchangeUnavailable()
         return self._backend.base
     
     def rate(self, currency):
+        """Return quotation between the base and another currency"""
         if not self._backend:
-            raise ExchangeRatesUnavailable()
+            raise CurrencyExchangeUnavailable()
         return self._backend.rate(currency)
     
-    def quotation(self, from_currency, to_currency):
+    def quotation(self, origin, target):
+        """Return quotation between two currencies (origin, target)"""
         if not self._backend:
-            raise ExchangeRatesUnavailable()
-        return self._backend.quotation(from_currency, to_currency)
+            raise CurrencyExchangeUnavailable()
+        return self._backend.quotation(origin, target)
     
     def __getattr__(self, name):
         # Redirect other attribute retrievals to the backend
         if name == '_backend' or self._backend is None:
-            raise ExchangeRatesUnavailable()
+            raise CurrencyExchangeUnavailable()
         return getattr(self._backend, name)
     
     def __setattr__(self, name, value):
@@ -106,7 +112,7 @@ class ExchangeRates(object):
         if name == '_backend':
             self.__dict__[name] = value
         elif self._backend is None:
-            raise ExchangeRatesUnavailable()
+            raise CurrencyExchangeUnavailable()
         else:
             setattr(self._backend, name, value)
 
