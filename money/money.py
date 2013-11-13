@@ -89,6 +89,9 @@ class Money(object):
         amount = self.amount + other
         return self.__class__(amount, self.currency)
     
+    def __radd__(self, other):
+        return self.__add__(other)
+    
     def __sub__(self, other):
         if isinstance(other, self.__class__):
             if other.currency != self.currency:
@@ -97,12 +100,18 @@ class Money(object):
         amount = self.amount - other
         return self.__class__(amount, self.currency)
     
+    def __rsub__(self, other):
+        return self.__sub__(other)
+    
     def __mul__(self, other):
         if isinstance(other, self.__class__):
             raise TypeError("multiplication is unsupported between "
                             "two money objects")
         amount = self.amount * other
         return self.__class__(amount, self.currency)
+    
+    def __rmul__(self, other):
+        return self.__mul__(other)
     
     def __truediv__(self, other):
         if isinstance(other, self.__class__):

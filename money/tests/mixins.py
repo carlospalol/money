@@ -186,9 +186,11 @@ class NumericOperationsMixin(object):
     def test_bool_false(self):
         self.assertFalse(self.MoneyClass('0', 'XXX'))
     
-    def test_add_number(self):
+    def test_add_int(self):
         result = self.MoneyClass('2', 'XXX') + 2
         self.assertEqual(result, self.MoneyClass('4', 'XXX'))
+    
+    def test_add_decimal(self):
         result = self.MoneyClass('2', 'XXX') + Decimal('2')
         self.assertEqual(result, self.MoneyClass('4', 'XXX'))
     
@@ -200,9 +202,15 @@ class NumericOperationsMixin(object):
         with self.assertRaises(TypeError):
             self.MoneyClass(0, 'XXX') + None
     
-    def test_sub_number(self):
+    def test_radd_int(self):
+        result = 2 + self.MoneyClass('2', 'XXX')
+        self.assertEqual(result, self.MoneyClass('4', 'XXX'))
+    
+    def test_sub_int(self):
         result = self.MoneyClass('2', 'XXX') - 2
         self.assertEqual(result, self.MoneyClass('0', 'XXX'))
+    
+    def test_sub_decimal(self):
         result = self.MoneyClass('2', 'XXX') - Decimal(2)
         self.assertEqual(result, self.MoneyClass('0', 'XXX'))
     
@@ -214,8 +222,16 @@ class NumericOperationsMixin(object):
         with self.assertRaises(TypeError):
             self.MoneyClass(0, 'XXX') - None
     
-    def test_mul_number(self):
+    def test_rsub_int(self):
+        result = 2 - self.MoneyClass('2', 'XXX')
+        self.assertEqual(result, self.MoneyClass('0', 'XXX'))
+    
+    def test_mul_int(self):
         result = self.MoneyClass('2', 'XXX') * 2
+        self.assertEqual(result, self.MoneyClass('4', 'XXX'))
+    
+    def test_mul_decimal(self):
+        result = self.MoneyClass('2', 'XXX') * Decimal(2)
         self.assertEqual(result, self.MoneyClass('4', 'XXX'))
     
     def test_mul_money(self):
@@ -226,8 +242,16 @@ class NumericOperationsMixin(object):
         with self.assertRaises(TypeError):
             self.MoneyClass(0, 'XXX') * None
     
-    def test_truediv_number(self):
+    def test_rmul_int(self):
+        result = 2 * self.MoneyClass('2', 'XXX')
+        self.assertEqual(result, self.MoneyClass('4', 'XXX'))
+    
+    def test_truediv_int(self):
         result = self.MoneyClass('2.22', 'XXX') / 2
+        self.assertEqual(result, self.MoneyClass('1.11', 'XXX'))
+    
+    def test_truediv_decimal(self):
+        result = self.MoneyClass('2.22', 'XXX') / Decimal(2)
         self.assertEqual(result, self.MoneyClass('1.11', 'XXX'))
     
     def test_truediv_money(self):
