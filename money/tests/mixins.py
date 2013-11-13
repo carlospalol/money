@@ -266,7 +266,11 @@ class NumericOperationsMixin(object):
     
     def test_truediv_none(self):
         with self.assertRaises(TypeError):
-            self.MoneyClass(0, 'XXX') / None
+            self.MoneyClass(2, 'XXX') / None
+    
+    def test_truediv_zero(self):
+        with self.assertRaises(ZeroDivisionError):
+            self.MoneyClass(2, 'XXX') / 0
     
     def test_floordiv_number(self):
         result = self.MoneyClass('2.22', 'XXX') // 2
@@ -278,7 +282,11 @@ class NumericOperationsMixin(object):
     
     def test_floordiv_none(self):
         with self.assertRaises(TypeError):
-            self.MoneyClass(0, 'XXX') // None
+            self.MoneyClass(2, 'XXX') // None
+    
+    def test_floordiv_zero(self):
+        with self.assertRaises(ZeroDivisionError):
+            self.MoneyClass(2, 'XXX') // 0
     
     def test_mod_number(self):
         result = self.MoneyClass('2.22', 'XXX') % 2
@@ -290,7 +298,11 @@ class NumericOperationsMixin(object):
     
     def test_mod_none(self):
         with self.assertRaises(TypeError):
-            self.MoneyClass(0, 'XXX') % None
+            self.MoneyClass(2, 'XXX') % None
+    
+    def test_mod_zero(self):
+        with self.assertRaises(ZeroDivisionError):
+            self.MoneyClass(2, 'XXX') % 0
     
     def test_divmod_number(self):
         whole, remainder = divmod(self.MoneyClass('2.22', 'XXX'), 2)
@@ -304,7 +316,11 @@ class NumericOperationsMixin(object):
     
     def test_divmod_none(self):
         with self.assertRaises(TypeError):
-            divmod(self.MoneyClass(0, 'XXX'), None)
+            divmod(self.MoneyClass(2, 'XXX'), None)
+    
+    def test_divmod_zero(self):
+        with self.assertRaises(ZeroDivisionError):
+            divmod(self.MoneyClass(2, 'XXX'), 0)
     
     def test_pow_number(self):
         result = self.MoneyClass('3', 'XXX') ** 2
@@ -372,7 +388,7 @@ class LeftmostTypePrevailsMixin(object):
         result = self.home + self.visitor
         self.assertEqual(result.__class__, self.MoneyClass)
     
-    def test_radd(self):
+    def test_add_other(self):
         result = self.visitor + self.home
         self.assertEqual(result.__class__, self.OtherClass)
     
@@ -380,7 +396,7 @@ class LeftmostTypePrevailsMixin(object):
         result = self.home - self.visitor
         self.assertEqual(result.__class__, self.MoneyClass)
     
-    def test_rsub(self):
+    def test_sub_other(self):
         result = self.visitor - self.home
         self.assertEqual(result.__class__, self.OtherClass)
     

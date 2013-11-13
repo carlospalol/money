@@ -39,21 +39,21 @@ class Money(object):
         return "{} {:,.2f}".format(self.currency, self.amount)
     
     def __lt__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Money):
             if other.currency != self.currency:
                 raise CurrencyMismatch(self.currency, other.currency, '<')
             other = other.amount
         return self.amount < other
     
     def __le__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Money):
             if other.currency != self.currency:
                 raise CurrencyMismatch(self.currency, other.currency, '<=')
             other = other.amount
         return self.amount <= other
     
     def __eq__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Money):
             return ((self.amount == other.amount) and 
                     (self.currency == other.currency))
         return False
@@ -62,14 +62,14 @@ class Money(object):
         return not self == other
     
     def __gt__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Money):
             if other.currency != self.currency:
                 raise CurrencyMismatch(self.currency, other.currency, '>')
             other = other.amount
         return self.amount > other
     
     def __ge__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Money):
             if other.currency != self.currency:
                 raise CurrencyMismatch(self.currency, other.currency, '>=')
             other = other.amount
@@ -82,7 +82,7 @@ class Money(object):
         return bool(self.amount)
     
     def __add__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Money):
             if other.currency != self.currency:
                 raise CurrencyMismatch(self.currency, other.currency, '+')
             other = other.amount
@@ -93,7 +93,7 @@ class Money(object):
         return self.__add__(other)
     
     def __sub__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Money):
             if other.currency != self.currency:
                 raise CurrencyMismatch(self.currency, other.currency, '-')
             other = other.amount
@@ -104,7 +104,7 @@ class Money(object):
         return self.__sub__(other)
     
     def __mul__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Money):
             raise TypeError("multiplication is unsupported between "
                             "two money objects")
         if isinstance(other, float):
@@ -116,39 +116,56 @@ class Money(object):
         return self.__mul__(other)
     
     def __truediv__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Money):
             if other.currency != self.currency:
                 raise CurrencyMismatch(self.currency, other.currency, '/')
-            return self.amount / other.to(self.currency).amount
-        amount = self.amount / other
-        return self.__class__(amount, self.currency)
+            elif other.amount == 0:
+                raise ZeroDivisionError()
+            return self.amount / other.amount
+        else:
+            if other == 0:
+                raise ZeroDivisionError()
+            amount = self.amount / other
+            return self.__class__(amount, self.currency)
     
     def __floordiv__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Money):
             if other.currency != self.currency:
                 raise CurrencyMismatch(self.currency, other.currency, '//')
-            return self.amount // other.to(self.currency).amount
-        amount = self.amount // other
-        return self.__class__(amount, self.currency)
+            elif other.amount == 0:
+                raise ZeroDivisionError()
+            return self.amount // other.amount
+        else:
+            if other == 0:
+                raise ZeroDivisionError()
+            amount = self.amount // other
+            return self.__class__(amount, self.currency)
     
     def __mod__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Money):
             raise TypeError("modulo is unsupported between two '{}' "
                             "objects".format(self.__class__.__name__))
+        if other == 0:
+            raise ZeroDivisionError()
         amount = self.amount % other
         return self.__class__(amount, self.currency)
     
     def __divmod__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Money):
             if other.currency != self.currency:
                 raise CurrencyMismatch(self.currency, other.currency, 'divmod')
-            return divmod(self.amount, other.to(self.currency).amount)
-        whole, remainder = divmod(self.amount, other)
-        return (self.__class__(whole, self.currency),
-                self.__class__(remainder, self.currency))
+            elif other.amount == 0:
+                raise ZeroDivisionError()
+            return divmod(self.amount, other.amount)
+        else:
+            if other == 0:
+                raise ZeroDivisionError()
+            whole, remainder = divmod(self.amount, other)
+            return (self.__class__(whole, self.currency),
+                    self.__class__(remainder, self.currency))
     
     def __pow__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Money):
             raise TypeError("power operator is unsupported between two '{}' "
                             "objects".format(self.__class__.__name__))
         amount = self.amount ** other
@@ -235,57 +252,48 @@ class Money(object):
 class XMoney(Money):
     def __lt__(self, other):
         if isinstance(other, Money):
-            other = other.to(self.currency).amount
-        return self.amount < other
+            other = other.to(self.currency)
+        return super().__lt__(other)
     
     def __le__(self, other):
         if isinstance(other, Money):
-            other = other.to(self.currency).amount
-        return self.amount <= other
+            other = other.to(self.currency)
+        return super().__le__(other)
     
     def __gt__(self, other):
         if isinstance(other, Money):
-            other = other.to(self.currency).amount
-        return self.amount > other
+            other = other.to(self.currency)
+        return super().__gt__(other)
     
     def __ge__(self, other):
         if isinstance(other, Money):
-            other = other.to(self.currency).amount
-        return self.amount >= other
+            other = other.to(self.currency)
+        return super().__ge__(other)
     
     def __add__(self, other):
         if isinstance(other, Money):
-            other = other.to(self.currency).amount
-        amount = self.amount + other
-        return self.__class__(amount, self.currency)
+            other = other.to(self.currency)
+        return super().__add__(other)
     
     def __sub__(self, other):
         if isinstance(other, Money):
-            other = other.to(self.currency).amount
-        amount = self.amount - other
-        return self.__class__(amount, self.currency)
+            other = other.to(self.currency)
+        return super().__sub__(other)
     
     def __truediv__(self, other):
         if isinstance(other, Money):
-            return self.amount / other.to(self.currency).amount
-        else:
-            amount = self.amount / other
-            return self.__class__(amount, self.currency)
+            other = other.to(self.currency)
+        return super().__truediv__(other)
     
     def __floordiv__(self, other):
         if isinstance(other, Money):
-            return self.amount // other.to(self.currency).amount
-        else:
-            amount = self.amount // other
-            return self.__class__(amount, self.currency)
+            other = other.to(self.currency)
+        return super().__floordiv__(other)
     
     def __divmod__(self, other):
         if isinstance(other, Money):
-            other = other.to(self.currency).amount
-            return divmod(self.amount, other)
-        whole, remainder = divmod(self.amount, other)
-        return (self.__class__(whole, self.currency),
-                self.__class__(remainder, self.currency))
+            other = other.to(self.currency)
+        return super().__divmod__(other)
 
 
 
