@@ -38,6 +38,23 @@ class TestExchangeRatesSetup(unittest.TestCase):
     def test_no_backend_get_quotation(self):
         with self.assertRaises(CurrencyExchangeUnavailable):
             xrates.quotation('XXX', 'YYY')
+    
+    def test_multiple_xrates(self):
+        xrates.register_backend('money.exchange.SimpleBackend')
+        self.assertTrue(xrates)
+        xrates.base = 'XXX'
+        xrates.setrate('AAA', Decimal('2'))
+        
+        from money.exchange import ExchangeRates
+        another = ExchangeRates()
+        another.register_backend('money.exchange.SimpleBackend')
+        self.assertTrue(another)
+        another.base = 'XXX'
+        another.setrate('AAA', Decimal('100'))
+        
+        self.assertEqual(xrates.rate('AAA'), Decimal('2'))
+        self.assertEqual(another.rate('AAA'), Decimal('100'))
+
 
 
 class BackendTestBase(metaclass=abc.ABCMeta):
