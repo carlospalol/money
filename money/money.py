@@ -23,8 +23,8 @@ class Money(object):
         try:
             self.amount = decimal.Decimal(amount)
         except decimal.InvalidOperation:
-            raise ValueError("invalid amount value for Decimal(): "
-                             "'{}'".format(amount)) from None
+            raise ValueError("amount value could not be converted to "
+                             "Decimal(): '{}'".format(amount)) from None
         if currency in [None, False, '']:
             raise ValueError("invalid currency value: '{}'".format(currency))
         if not REGEX_CURRENCY_CODE.match(currency):
