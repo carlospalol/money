@@ -25,6 +25,9 @@ class TestXMoneyNumericOperations(NumericOperationsMixin, unittest.TestCase):
 class TestXMoneyUnaryOperationsReturnNew(UnaryOperationsReturnNewMixin, unittest.TestCase):
     MoneyClass = XMoney
 
+class TestXMoneyLeftmostTypePrevails(LeftmostTypePrevailsMixin, unittest.TestCase):
+    MoneyClass = XMoney
+
 
 class TestXMoneyAutoConversion(unittest.TestCase):
     @classmethod

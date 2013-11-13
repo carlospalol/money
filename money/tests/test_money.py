@@ -24,4 +24,5 @@ class TestMoneyNumericOperations(NumericOperationsMixin, unittest.TestCase):
 class TestMoneyUnaryOperationsReturnNew(UnaryOperationsReturnNewMixin, unittest.TestCase):
     MoneyClass = Money
 
-
+class TestMoneyLeftmostTypePrevails(LeftmostTypePrevailsMixin, unittest.TestCase):
+    MoneyClass = Money

@@ -3,6 +3,8 @@ from decimal import Decimal
 import collections
 import unittest
 
+from money import Money, XMoney
+
 
 class ClassMixin(object):
     def test_new_instance_int_amount(self):
@@ -350,6 +352,36 @@ class UnaryOperationsReturnNewMixin(object):
     
     def test_round(self):
         self.assertIsNot(round(self.money), self.money)
+
+
+class LeftmostTypePrevailsMixin(object):
+    def setUp(self):
+        if self.MoneyClass.__name__ == 'Money':
+            self.OtherClass = XMoney
+        if self.MoneyClass.__name__ == 'XMoney':
+            self.OtherClass = Money
+        
+        self.home = self.MoneyClass(2, 'XXX')
+        self.visitor = self.OtherClass(2, 'XXX')
+    
+    def test_add(self):
+        result = self.home + self.visitor
+        self.assertEqual(result.__class__, self.MoneyClass)
+    
+    def test_radd(self):
+        result = self.visitor + self.home
+        self.assertEqual(result.__class__, self.OtherClass)
+    
+    def test_sub(self):
+        result = self.home - self.visitor
+        self.assertEqual(result.__class__, self.MoneyClass)
+    
+    def test_rsub(self):
+        result = self.visitor - self.home
+        self.assertEqual(result.__class__, self.OtherClass)
+    
+
+
 
 
 
