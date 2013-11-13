@@ -1,9 +1,10 @@
 import unittest
 import collections
 from decimal import Decimal
+import abc
 
-from money import Money, xrates
-from money.money import BABEL_AVAILABLE
+from money import Money, xrates, CurrencyMismatch, ExchangeRatesUnavailable
+from .money import BABEL_AVAILABLE
 
 
 class TestClass(unittest.TestCase):
@@ -330,7 +331,7 @@ class TestUnaryOperationsReturnNewObject(unittest.TestCase):
         self.assertIsNot(round(self.money), self.money)
 
 
-class TestExchangeRatesBackendRegistration(unittest.TestCase):
+class TestExchangeRatesSetup(unittest.TestCase):
     def setUp(self):
         xrates.unregister_backend()
     
@@ -347,44 +348,75 @@ class TestExchangeRatesBackendRegistration(unittest.TestCase):
         self.assertFalse(xrates)
         self.assertIsNone(xrates.backend_name)
     
-    def test_unavailable_backend(self):
-        with self.assertRaises(NotImplementedError):
-            Money(1, 'EUR') > Money(1, 'USD')
+    def test_no_backend_name(self):
+        self.assertIsNone(xrates.backend_name)
+    
+    def test_no_backend_base(self):
+        with self.assertRaises(ExchangeRatesUnavailable):
+            xrates.base
+    
+    def test_no_backend_get_rate(self):
+        with self.assertRaises(ExchangeRatesUnavailable):
+            xrates.rate('XXX')
+    
+    def test_no_backend_get_quotation(self):
+        with self.assertRaises(ExchangeRatesUnavailable):
+            xrates.quotation('XXX', 'YYY')
 
 
-class TestExchangeRatesSimpleBackend(unittest.TestCase):
+class ExchangeRatesBackendTest(metaclass=abc.ABCMeta):
+    @abc.abstractmethod
+    def test_base_property(self):
+        pass
+    
+    @abc.abstractmethod
+    def test_rate(self):
+        pass
+    
+    @abc.abstractmethod
+    def test_quotation(self):
+        pass
+    
+    @abc.abstractmethod
+    def test_unavailable_rate_returns_none(self):
+        pass
+    
+    @abc.abstractmethod
+    def test_unavailable_quotation_returns_none(self):
+        pass
+
+
+class TestSimpleBackend(ExchangeRatesBackendTest, unittest.TestCase):
     def setUp(self):
         xrates.register_backend('money.exchange.SimpleBackend')
     
-    def set_rates(self):
-        xrates.base = 'USD'
-        xrates.setrate('ZZZ', Decimal('1.333'))
-        xrates.setrate('YYY', Decimal('2.222'))
+    def load_testing_data(self):
+        xrates.base = 'XXX'
+        xrates.setrate('AAA', Decimal('4.8'))
+        xrates.setrate('BBB', Decimal('2.4'))
     
-    def test_unavailable_rate(self):
-        self.assertIsNone(xrates.rate('ZZZ'))
-    
-    def test_unavailable_quotation(self):
-        self.assertIsNone(xrates.quotation('ZZZ', 'YYY'))
-    
-    def test_missing_base_error(self):
-        with self.assertRaisesRegex(Exception, 'you must set the base'):
-            xrates.setrate('ZZZ', Decimal(1.5))
-    
-    def test_base(self):
-        self.set_rates()
-        self.assertEqual(xrates.base, 'USD')
+    def test_base_property(self):
+        self.load_testing_data()
+        self.assertEqual(xrates.base, 'XXX')
     
     def test_rate(self):
-        self.set_rates()
-        self.assertEqual(xrates.rate('ZZZ'), Decimal('1.333'))
-        self.assertEqual(xrates.rate('YYY'), Decimal('2.222'))
+        self.load_testing_data()
+        self.assertEqual(xrates.rate('AAA'), Decimal('4.8'))
+        self.assertEqual(xrates.rate('BBB'), Decimal('2.4'))
     
     def test_quotation(self):
-        self.set_rates()
-        self.assertEqual(xrates.quotation('USD', 'ZZZ'), Decimal('1.333'))
-        self.assertEqual(xrates.quotation('USD', 'YYY'), Decimal('2.222'))
-        self.assertAlmostEqual(xrates.quotation('ZZZ', 'YYY'), Decimal('1.66691'), places=4)
+        self.load_testing_data()
+        self.assertEqual(xrates.quotation('XXX', 'AAA'), Decimal('4.8'))
+        self.assertEqual(xrates.quotation('XXX', 'BBB'), Decimal('2.4'))
+        self.assertEqual(xrates.quotation('AAA', 'BBB'), Decimal('0.5'))
+    
+    def test_unavailable_rate_returns_none(self):
+        self.load_testing_data()
+        self.assertIsNone(xrates.rate('ZZZ'))
+    
+    def test_unavailable_quotation_returns_none(self):
+        self.load_testing_data()
+        self.assertIsNone(xrates.quotation('YYY', 'ZZZ'))
 
 
 if __name__ == '__main__':

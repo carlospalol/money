@@ -2,6 +2,11 @@ import abc
 import decimal
 import importlib
 
+from .exceptions import ExchangeRatesUnavailable
+
+
+__all__ = ['xrates']
+
 
 class BackendBase(metaclass=abc.ABCMeta):
     @property
@@ -9,12 +14,6 @@ class BackendBase(metaclass=abc.ABCMeta):
     def base(self):
         """Return the base currency"""
         return
-    
-    @base.setter
-    @abc.abstractmethod
-    def base(self, currency):
-        """Set the base currency"""
-        pass
     
     @abc.abstractmethod
     def rate(self, currency):
@@ -45,7 +44,8 @@ class SimpleBackend(BackendBase):
     
     def setrate(self, currency, rate):
         if not self.base:
-            raise Exception("you must set the base first: xrates.base = currency")
+            raise Exception("you must set the base first: "
+                            "xrates.base = currency")
         self._rates[currency] = rate
     
     def rate(self, currency):
@@ -66,7 +66,8 @@ class ExchangeRates(object):
         module = importlib.import_module(path)
         backend = getattr(module, name)
         if not issubclass(backend, BackendBase):
-            raise TypeError("backend '{}' is not a subclass of BackendBase".format(backend))
+            raise TypeError("backend '{}' is not a subclass of "
+                            "BackendBase".format(backend))
         self._backend = backend()
     
     def unregister_backend(self):
@@ -81,29 +82,33 @@ class ExchangeRates(object):
     @property
     def base(self):
         if not self._backend:
-            raise Exception("no exchange rates backend registered")
+            raise ExchangeRatesUnavailable()
         return self._backend.base
-    
-    @base.setter
-    def base(self, currency):
-        if not self._backend:
-            raise Exception("no exchange rates backend registered")
-        self._backend.base = currency
     
     def rate(self, currency):
         if not self._backend:
-            raise Exception("no exchange rates backend registered")
+            raise ExchangeRatesUnavailable()
         return self._backend.rate(currency)
     
     def quotation(self, from_currency, to_currency):
         if not self._backend:
-            raise Exception("no exchange rates backend registered")
+            raise ExchangeRatesUnavailable()
         return self._backend.quotation(from_currency, to_currency)
     
     def __getattr__(self, name):
-        if not self._backend:
-            raise Exception("no exchange rates backend registered")
+        # Redirect other attribute retrievals to the backend
+        if name == '_backend' or self._backend is None:
+            raise ExchangeRatesUnavailable()
         return getattr(self._backend, name)
+    
+    def __setattr__(self, name, value):
+        # Redirect all assignations to the backend
+        if name == '_backend':
+            self.__dict__[name] = value
+        elif self._backend is None:
+            raise ExchangeRatesUnavailable()
+        else:
+            setattr(self._backend, name, value)
 
 
 xrates = ExchangeRates()
