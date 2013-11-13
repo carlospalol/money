@@ -21,7 +21,7 @@ class TestMoneyParser(ParserMixin, unittest.TestCase):
 class TestMoneyNumericOperations(NumericOperationsMixin, unittest.TestCase):
     MoneyClass = Money
 
-class TestMoneyUnaryReturnsNew(UnaryReturnsNewMixin, unittest.TestCase):
+class TestMoneyUnaryOperationsReturnNew(UnaryOperationsReturnNewMixin, unittest.TestCase):
     MoneyClass = Money
 
 

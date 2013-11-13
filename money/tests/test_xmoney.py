@@ -22,7 +22,7 @@ class TestXMoneyParser(ParserMixin, unittest.TestCase):
 class TestXMoneyNumericOperations(NumericOperationsMixin, unittest.TestCase):
     MoneyClass = XMoney
 
-class TestXMoneyUnaryReturnsNew(UnaryReturnsNewMixin, unittest.TestCase):
+class TestXMoneyUnaryOperationsReturnNew(UnaryOperationsReturnNewMixin, unittest.TestCase):
     MoneyClass = XMoney
 
 
@@ -90,4 +90,6 @@ class TestXMoneyAutoConversion(unittest.TestCase):
         whole, remainder = divmod(self.b, self.a)
         self.assertEqual(whole, Decimal('0'))
         self.assertEqual(remainder, Decimal('10'))
+
+
 

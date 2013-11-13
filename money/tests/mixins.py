@@ -314,7 +314,7 @@ class NumericOperationsMixin(object):
         self.assertEqual(round(self.MoneyClass('1.234', 'XXX'), 2), self.MoneyClass('1.23', 'XXX'))
 
 
-class UnaryReturnsNewMixin(object):
+class UnaryOperationsReturnNewMixin(object):
     def setUp(self):
         self.money = self.MoneyClass(2, 'XXX')
     
@@ -326,7 +326,6 @@ class UnaryReturnsNewMixin(object):
     
     def test_round(self):
         self.assertIsNot(round(self.money), self.money)
-
 
 
 
