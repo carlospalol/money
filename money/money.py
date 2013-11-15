@@ -204,7 +204,7 @@ class Money(object):
         """
         Return a locale-aware, currency-formatted string.
         
-        This method is a wrapper of Babel's babel.numbers.format_currency().
+        This method emulates babel.numbers.format_currency().
         
         A specific locale identifier (language[_territory]) can be passed,
         otherwise the system's default locale will be used. A custom
