@@ -60,7 +60,7 @@ class ExchangeRates(object):
     def __bool__(self):
         return bool(self._backend)
     
-    def register_backend(self, pythonpath='money.exchange.SimpleBackend'):
+    def install(self, pythonpath='money.exchange.SimpleBackend'):
         """Install an exchange rates backend using a python path string"""
         path, name = pythonpath.rsplit('.', 1)
         module = importlib.import_module(path)
@@ -70,7 +70,7 @@ class ExchangeRates(object):
                             "BackendBase".format(backend))
         self._backend = backend()
     
-    def unregister_backend(self):
+    def uninstall(self):
         """Uninstall any exchange rates backend"""
         self._backend = None
     

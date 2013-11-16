@@ -11,7 +11,7 @@ class CurrencyMismatch(Exception):
 class CurrencyExchangeUnavailable(Exception):
     def __init__(self):
         message = ("there is no backend installed: use e.g. money.xrates."
-                   "register_backend('money.exchange.SimpleBackend')")
+                   "install('money.exchange.SimpleBackend')")
         super().__init__(message)
 
 

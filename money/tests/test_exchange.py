@@ -9,18 +9,18 @@ from money.exceptions import CurrencyExchangeFailed
 
 class TestExchangeRatesSetup(unittest.TestCase):
     def setUp(self):
-        xrates.unregister_backend()
+        xrates.uninstall()
     
     def test_register(self):
         self.assertFalse(xrates)
         self.assertIsNone(xrates.backend_name)
-        xrates.register_backend('money.exchange.SimpleBackend')
+        xrates.install('money.exchange.SimpleBackend')
         self.assertEqual(xrates.backend_name, 'SimpleBackend')
     
     def test_unregister(self):
-        xrates.register_backend('money.exchange.SimpleBackend')
+        xrates.install('money.exchange.SimpleBackend')
         self.assertEqual(xrates.backend_name, 'SimpleBackend')
-        xrates.unregister_backend()
+        xrates.uninstall()
         self.assertFalse(xrates)
         self.assertIsNone(xrates.backend_name)
     
@@ -40,14 +40,14 @@ class TestExchangeRatesSetup(unittest.TestCase):
             xrates.quotation('XXX', 'YYY')
     
     def test_multiple_xrates(self):
-        xrates.register_backend('money.exchange.SimpleBackend')
+        xrates.install('money.exchange.SimpleBackend')
         self.assertTrue(xrates)
         xrates.base = 'XXX'
         xrates.setrate('AAA', Decimal('2'))
         
         from money.exchange import ExchangeRates
         another = ExchangeRates()
-        another.register_backend('money.exchange.SimpleBackend')
+        another.install('money.exchange.SimpleBackend')
         self.assertTrue(another)
         another.base = 'XXX'
         another.setrate('AAA', Decimal('100'))
@@ -84,7 +84,7 @@ class BackendTestBase(metaclass=abc.ABCMeta):
 
 class TestSimpleBackend(BackendTestBase, unittest.TestCase):
     def setUp(self):
-        xrates.register_backend('money.exchange.SimpleBackend')
+        xrates.install('money.exchange.SimpleBackend')
     
     def load_testing_data(self):
         xrates.base = 'XXX'
@@ -133,12 +133,12 @@ class TestSimpleBackend(BackendTestBase, unittest.TestCase):
 
 class ConversionMixin(object):
     def test_unavailable_backend_conversion_error(self):
-        xrates.unregister_backend()
+        xrates.uninstall()
         with self.assertRaises(CurrencyExchangeUnavailable):
             self.MoneyClass('2', 'AAA').to('BBB')
     
     def test_unavailable_rate_conversion_error(self):
-        xrates.register_backend('money.exchange.SimpleBackend')
+        xrates.install('money.exchange.SimpleBackend')
         with self.assertRaises(CurrencyExchangeFailed):
             self.MoneyClass('2', 'AAA').to('BBB')
 

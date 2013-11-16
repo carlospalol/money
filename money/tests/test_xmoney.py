@@ -32,14 +32,14 @@ class TestXMoneyLeftmostTypePrevails(LeftmostTypePrevailsMixin, unittest.TestCas
 class TestXMoneyAutoConversion(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        xrates.register_backend('money.exchange.SimpleBackend')
+        xrates.install('money.exchange.SimpleBackend')
         xrates.base = 'XXX'
         xrates.setrate('AAA', Decimal('2'))
         xrates.setrate('BBB', Decimal('8'))
     
     @classmethod
     def tearDownClass(cls):
-        xrates.unregister_backend()
+        xrates.uninstall()
     
     def setUp(self):
         self.x = XMoney('10', 'XXX')
