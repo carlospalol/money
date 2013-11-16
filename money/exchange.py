@@ -1,3 +1,6 @@
+"""
+Money exchange related classes and ``xrates`` API entry point.
+"""
 import abc
 import decimal
 import importlib
@@ -5,10 +8,8 @@ import importlib
 from .exceptions import ExchangeBackendNotInstalled
 
 
-__all__ = ['xrates']
-
-
 class BackendBase(metaclass=abc.ABCMeta):
+    """Abstract base class API for exchange backends"""
     @property
     @abc.abstractmethod
     def base(self):
@@ -20,6 +21,7 @@ class BackendBase(metaclass=abc.ABCMeta):
         """Return quotation between the base and another currency"""
         return None
     
+    @abc.abstractmethod
     def quotation(self, origin, target):
         """Return quotation between two currencies (origin, target)"""
         a = self.rate(origin)
@@ -51,6 +53,9 @@ class SimpleBackend(BackendBase):
         if currency == self.base:
             return decimal.Decimal(1)
         return self._rates.get(currency, None)
+    
+    def quotation(self, origin, target):
+        return super().quotation(origin, target)
 
 
 class ExchangeRates(object):

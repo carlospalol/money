@@ -1,3 +1,6 @@
+"""
+Money unittests as mixins for Money and subclasses
+"""
 import abc
 from decimal import Decimal
 import collections

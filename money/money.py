@@ -1,3 +1,6 @@
+"""
+Money classes
+"""
 import decimal
 import re
 
@@ -19,6 +22,7 @@ except ImportError:
 
 
 class Money(object):
+    """Money class with a decimal amount and a currency"""
     def __init__(self, amount="0", currency=None):
         try:
             self.amount = decimal.Decimal(amount)
@@ -76,9 +80,12 @@ class Money(object):
         return self.amount >= other
     
     def __bool__(self):
-        # Considering Money a "numeric type":
-        # bool(Money(2, 'XXX')) --> True
-        # bool(Money(0, 'XXX')) --> False
+        """
+        Considering Money a numeric type (on ``amount``):
+        
+        bool(Money(2, 'XXX')) --> True
+        bool(Money(0, 'XXX')) --> False
+        """
         return bool(self.amount)
     
     def __add__(self, other):
@@ -250,6 +257,7 @@ class Money(object):
 
 
 class XMoney(Money):
+    """Money subclass with implicit currency conversion"""
     def __lt__(self, other):
         if isinstance(other, Money):
             other = other.to(self.currency)

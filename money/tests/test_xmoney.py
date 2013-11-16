@@ -1,3 +1,6 @@
+"""
+XMoney class unittests
+"""
 from decimal import Decimal
 import unittest
 

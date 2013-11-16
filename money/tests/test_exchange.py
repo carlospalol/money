@@ -1,3 +1,6 @@
+"""
+Money exchange unittests
+"""
 import abc
 from decimal import Decimal
 import unittest

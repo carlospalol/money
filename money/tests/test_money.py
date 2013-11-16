@@ -1,3 +1,6 @@
+"""
+Money class unittests
+"""
 import unittest
 
 from money import Money

@@ -1,3 +1,6 @@
+"""
+Money doctests as unittest Suite
+"""
 import doctest
 
 
