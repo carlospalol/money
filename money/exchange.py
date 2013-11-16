@@ -2,7 +2,7 @@ import abc
 import decimal
 import importlib
 
-from .exceptions import CurrencyExchangeUnavailable
+from .exceptions import ExchangeBackendNotInstalled
 
 
 __all__ = ['xrates']
@@ -85,25 +85,26 @@ class ExchangeRates(object):
     def base(self):
         """Return the base currency"""
         if not self._backend:
-            raise CurrencyExchangeUnavailable()
+            raise ExchangeBackendNotInstalled()
         return self._backend.base
     
     def rate(self, currency):
         """Return quotation between the base and another currency"""
         if not self._backend:
-            raise CurrencyExchangeUnavailable()
+            raise ExchangeBackendNotInstalled()
         return self._backend.rate(currency)
     
     def quotation(self, origin, target):
         """Return quotation between two currencies (origin, target)"""
         if not self._backend:
-            raise CurrencyExchangeUnavailable()
+            raise ExchangeBackendNotInstalled()
         return self._backend.quotation(origin, target)
     
     def __getattr__(self, name):
+        
         # Redirect other attribute retrievals to the backend
         if name == '_backend' or self._backend is None:
-            raise CurrencyExchangeUnavailable()
+            raise ExchangeBackendNotInstalled()
         return getattr(self._backend, name)
     
     def __setattr__(self, name, value):
@@ -111,7 +112,7 @@ class ExchangeRates(object):
         if name == '_backend':
             self.__dict__[name] = value
         elif self._backend is None:
-            raise CurrencyExchangeUnavailable()
+            raise ExchangeBackendNotInstalled()
         else:
             setattr(self._backend, name, value)
 

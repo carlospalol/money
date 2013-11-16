@@ -2,7 +2,7 @@ import decimal
 import re
 
 from .exchange import xrates
-from .exceptions import CurrencyMismatch, CurrencyExchangeFailed
+from .exceptions import CurrencyMismatch, ExchangeRateNotFound
 
 
 __all__ = ['Money', 'XMoney']
@@ -195,7 +195,7 @@ class Money(object):
             return self
         rate = xrates.quotation(self.currency, currency)
         if rate is None:
-            raise CurrencyExchangeFailed(xrates.backend_name,
+            raise ExchangeRateNotFound(xrates.backend_name,
                                          self.currency, currency)
         amount = self.amount * rate
         return self.__class__(amount, currency)
