@@ -101,14 +101,11 @@ class ExchangeRates(object):
         return self._backend.quotation(origin, target)
     
     def __getattr__(self, name):
-        
-        # Redirect other attribute retrievals to the backend
-        if name == '_backend' or self._backend is None:
+        if self._backend is None:
             raise ExchangeBackendNotInstalled()
         return getattr(self._backend, name)
     
     def __setattr__(self, name, value):
-        # Redirect all assignations to the backend
         if name == '_backend':
             self.__dict__[name] = value
         elif self._backend is None:
