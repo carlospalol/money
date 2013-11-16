@@ -67,7 +67,7 @@ class ExchangeRates(object):
         backend = getattr(module, name)
         if not issubclass(backend, BackendBase):
             raise TypeError("backend '{}' is not a subclass of "
-                            "BackendBase".format(backend))
+                            "money.xrates.BackendBase".format(backend))
         self._backend = backend()
     
     def uninstall(self):
