@@ -1,13 +1,13 @@
 
-############
+============
 Python Money
-############
+============
 
 Money class with optional CLDR-backed locale-aware formatting and an extensible currency exchange solution.
 
 
 Installation
-------------
+============
 
 *money* requires python 3.3
 
@@ -23,7 +23,7 @@ For locale-aware formatting, also install `Babel <https://pypi.python.org/pypi/B
 
 
 Basic usage
------------
+===========
 
 .. code:: python
 
@@ -128,12 +128,12 @@ Design decisions
 There are several design decisions in *money* that differ from currently available money class implementations:
 
 Localization
-^^^^^^^^^^^^
+------------
 
 Do not keep any kind of locale conventions database inside this package. Locale conventions are extensive and change over time. There is already such a database (the Unicode Common Locale Data Repository), and an excellent python API for it: `Babel <https://pypi.python.org/pypi/Babel>`_.
 
 Currency
-^^^^^^^^
+--------
 
 There is no need for a currency class. A currency is fully identified by its ISO 4217 code, and localization or exchange rates data are expected to be centralized as databases/services because of their changing nature.
 
