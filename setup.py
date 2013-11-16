@@ -12,7 +12,7 @@ setup(
     version='1.0b1',
     author='Carlos Palol',
     author_email='carlos.palol@awarepixel.com',
-    url='http://www.awarepixel.com',
+    url='https://github.com/carlospalol/money',
     license='MIT',
     packages=[
         'money',
