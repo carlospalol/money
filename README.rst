@@ -13,7 +13,7 @@ Installation
 
 ::
 
-    pip install money
+    pip install --pre money
 
 For locale-aware formatting, also install `Babel <https://pypi.python.org/pypi/Babel>`_:
 
