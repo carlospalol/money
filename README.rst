@@ -130,7 +130,7 @@ There are several design decisions in *money* that differ from currently availab
 Localization
 ------------
 
-Do not keep any kind of locale conventions database inside this package. Locale conventions are extensive and change over time. There is already such a database (the Unicode Common Locale Data Repository), and an excellent python API for it: `Babel <https://pypi.python.org/pypi/Babel>`_.
+Do not keep any kind of locale conventions database inside this package. Locale conventions are extensive and change over time; keeping track of them is a project of its own. There is already such a project and database (the Unicode Common Locale Data Repository), and an excellent python API for it: `Babel <https://pypi.python.org/pypi/Babel>`_.
 
 Currency
 --------
