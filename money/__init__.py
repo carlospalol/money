@@ -6,4 +6,4 @@ from .money import Money, XMoney
 from .exchange import xrates
 
 
-__version__ = '1.0-beta'
+__version__ = '1.0b2'

@@ -9,7 +9,7 @@ setup(
     name='money',
     description='Python Money Class',
     long_description=DESCRIPTION,
-    version='1.0b1',
+    version='1.0b2',
     author='Carlos Palol',
     author_email='carlos.palol@awarepixel.com',
     url='https://github.com/carlospalol/money',
