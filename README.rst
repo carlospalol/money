@@ -9,7 +9,7 @@ Money class with optional CLDR-backed locale-aware formatting and an extensible 
 Installation
 ============
 
-*money* requires python 3.3
+*money* requires **python 3.3**
 
 ::
 
