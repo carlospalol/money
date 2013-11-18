@@ -144,6 +144,18 @@ Also:
 + **Global default currency**: subclassing is a safer solution.
 
 
+Contributions
+=============
+
+Contributions are welcome. You can use the `regular github mechanisms <https://help.github.com/>`_.
+
+To run the tests, sit on the package root (by setup.py) and let the new python test discovery do its thing:
+
+::
+
+    python -m unittest
+
+
 License
 =======
 
