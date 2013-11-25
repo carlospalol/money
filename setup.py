@@ -8,7 +8,7 @@ Python money class with optional CLDR-backed locale-aware formatting and an exte
 setup(
     name='money',
     description='Python Money Class',
-    long_description=DESCRIPTION,
+    # long_description=DESCRIPTION,
     version='1.0.1',
     author='Carlos Palol',
     author_email='carlos.palol@awarepixel.com',
