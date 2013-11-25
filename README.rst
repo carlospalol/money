@@ -81,7 +81,7 @@ The character ``\xa0`` is an unicode non-breaking space. If no locale is passed,
     '-1235 dólares estadounidenses'
 
 
-`Learn more about the formatting syntaxis <http://www.unicode.org/reports/tr35/tr35-numbers.html#Number_Format_Patterns>`_.
+`Learn more about the formatting syntax: <http://www.unicode.org/reports/tr35/tr35-numbers.html#Number_Format_Patterns>`_.
 
 
 Currency exchange
