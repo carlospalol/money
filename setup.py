@@ -16,7 +16,6 @@ setup(
     license='MIT',
     packages=[
         'money',
-        'money.tests',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
