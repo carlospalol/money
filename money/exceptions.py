@@ -16,6 +16,7 @@ class ExchangeError(Exception):
     """Generic exception related to exchange rates"""
     pass
 
+
 class ExchangeBackendNotInstalled(ExchangeError):
     """No backend installed yet"""
     def __init__(self):
@@ -28,5 +29,3 @@ class ExchangeRateNotFound(ExchangeError):
     def __init__(self, backend, a, b):
         msg = ("rate not found in backend '{}': {}/{}".format(backend, a, b))
         super().__init__(msg)
-
-
