@@ -10,7 +10,7 @@ All code examples use Python 3.x.
 Installation
 ============
 
-*money* requires **python 3.3**
+This package is compatible with Python 2.7, 3.3, and 3.4.
 
 ::
 
