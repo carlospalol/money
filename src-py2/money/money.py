@@ -83,7 +83,7 @@ class Money(object):
             other = other.amount
         return self.amount >= other
     
-    def __bool__(self):
+    def __nonzero__(self):
         """
         Considering Money a numeric type (on ``amount``):
         

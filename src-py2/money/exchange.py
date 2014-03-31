@@ -65,7 +65,7 @@ class ExchangeRates(object):
     def __init__(self):
         self._backend = None
     
-    def __bool__(self):
+    def __nonzero__(self):
         return bool(self._backend)
     
     def install(self, pythonpath='money.exchange.SimpleBackend'):
