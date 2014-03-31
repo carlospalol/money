@@ -5,6 +5,7 @@ Python Money
 
 Money class with optional CLDR-backed locale-aware formatting and an extensible currency exchange solution.
 
+All code examples use Python 3.x.
 
 Installation
 ============

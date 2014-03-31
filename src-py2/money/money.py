@@ -41,7 +41,10 @@ class Money(object):
         return "{} {}".format(self.currency, self.amount)
     
     def __str__(self):
-        return "{} {:,.2f}".format(self.currency, self.amount)
+        return self.__unicode__().encode('utf-8')
+    
+    def __unicode__(self):
+        return u"{} {:,.2f}".format(self.currency, self.amount)
     
     def __lt__(self, other):
         if isinstance(other, Money):
