@@ -123,6 +123,9 @@ class Money(object):
     def __rmul__(self, other):
         return self.__mul__(other)
     
+    def __div__(self, other):
+        return self.__truediv__(other)
+    
     def __truediv__(self, other):
         if isinstance(other, Money):
             if other.currency != self.currency:
@@ -288,6 +291,9 @@ class XMoney(Money):
         if isinstance(other, Money):
             other = other.to(self.currency)
         return super(XMoney, self).__sub__(other)
+    
+    def __div__(self, other):
+        return self.__truediv__(other)
     
     def __truediv__(self, other):
         if isinstance(other, Money):
