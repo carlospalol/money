@@ -28,7 +28,7 @@ class Money(object):
             self.amount = decimal.Decimal(amount)
         except decimal.InvalidOperation:
             raise ValueError("amount value could not be converted to "
-                             "Decimal(): '{}'".format(amount)) from None
+                             "Decimal(): '{}'".format(amount))
         if currency in [None, False, '']:
             raise ValueError("invalid currency value: '{}'".format(currency))
         if not REGEX_CURRENCY_CODE.match(currency):
@@ -253,7 +253,7 @@ class Money(object):
             return cls(amount, currency)
         except ValueError as err:
             raise ValueError("failed to parse string '{}': "
-                             "{}".format(s, err)) from None
+                             "{}".format(s, err))
 
 
 class XMoney(Money):
