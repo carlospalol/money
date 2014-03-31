@@ -124,8 +124,8 @@ class NumericOperationsMixin(object):
         self.assertTrue(self.MoneyClass('-2.22', 'XXX') < self.MoneyClass('2.22', 'XXX'))
     
     def test_lt_none(self):
-        with self.assertRaises(TypeError):
-            self.MoneyClass(0, 'XXX') < None
+        # Py2: it is OK to compare Decimal with None
+        self.assertFalse(self.MoneyClass(0, 'XXX') < None)
     
     def test_le_number(self):
         self.assertTrue(self.MoneyClass('2.219', 'XXX') <= 3)
@@ -138,8 +138,8 @@ class NumericOperationsMixin(object):
         self.assertTrue(self.MoneyClass('2.220', 'XXX') <= self.MoneyClass('2.22', 'XXX'))
     
     def test_le_none(self):
-        with self.assertRaises(TypeError):
-            self.MoneyClass(0, 'XXX') <= None
+        # Py2: it is OK to compare Decimal with None
+        self.assertFalse(self.MoneyClass(0, 'XXX') <= None)
     
     def test_eq(self):
         self.assertEqual(self.MoneyClass('2', 'XXX'), self.MoneyClass('2', 'XXX'))
@@ -166,8 +166,8 @@ class NumericOperationsMixin(object):
         self.assertTrue(self.MoneyClass('2.22', 'XXX') > self.MoneyClass('-2.22', 'XXX'))
     
     def test_gt_none(self):
-        with self.assertRaises(TypeError):
-            self.MoneyClass(0, 'XXX') > None
+        # Py2: it is OK to compare Decimal with None
+        self.assertTrue(self.MoneyClass(0, 'XXX') > None)
     
     def test_ge_number(self):
         self.assertTrue(self.MoneyClass('2', 'XXX') >= 1)
@@ -181,8 +181,8 @@ class NumericOperationsMixin(object):
         self.assertTrue(self.MoneyClass('2.22', 'XXX') >= self.MoneyClass('2.22', 'XXX'))
     
     def test_ge_none(self):
-        with self.assertRaises(TypeError):
-            self.MoneyClass(0, 'XXX') >= None
+        # Py2: it is OK to compare Decimal with None
+        self.assertTrue(self.MoneyClass(0, 'XXX') >= None)
     
     def test_bool_true(self):
         self.assertTrue(self.MoneyClass('2.22', 'XXX'))
