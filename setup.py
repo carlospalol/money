@@ -5,6 +5,13 @@ DESCRIPTION = """
 Python money class with optional CLDR-backed locale-aware formatting and an extensible currency exchange solution.
 """
 
+SOURCE_ROOT = 'src'
+
+# Python 2 backwards compatibility
+if sys.version_info[0] == 2:
+    SOURCE_ROOT = 'src-py2'
+
+
 setup(
     name='money',
     description='Python Money Class',
@@ -14,6 +21,7 @@ setup(
     author_email='carlos.palol@awarepixel.com',
     url='https://github.com/carlospalol/money',
     license='MIT',
+    package_dir={'': SOURCE_ROOT},
     packages=[
         'money',
     ],
