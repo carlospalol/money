@@ -7,6 +7,13 @@ Money class with optional CLDR-backed locale-aware formatting and an extensible 
 
 All code examples use Python 3.x.
 
+**Contents**
+
+.. contents::
+    :local:
+    :backlinks: none
+
+
 Installation
 ============
 
