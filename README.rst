@@ -17,7 +17,7 @@ All code examples use Python 3.x.
 Installation
 ============
 
-This package is compatible with Python 2.7, 3.3, and 3.4.
+This package is compatible with Python 2.7, 3.3, 3.4, but there are important `Differences between Python versions`_.
 
 ::
 
@@ -128,6 +128,25 @@ You can use a subclass of Money, **XMoney** if you prefer automatic conversion b
     b = XMoney(1, 'BBB')
 
     assert a + b == XMoney('1.25', 'AAA')
+
+
+.. _python-differences:
+
+Differences between Python versions
+===================================
+
+.. list-table::
+    :header-rows: 1
+    :stub-columns: 1
+    
+    * - Expression
+      - Python 2.x
+      - Python 3.x
+    
+    * - ``round(Money('2.5', 'EUR'))``
+      - Returns ``3.0``, a **float** rounded amount **away from zero**.
+      - Returns ``EUR 2``, a **Money object** with rounded amount to the **nearest even**.
+
 
 
 Design decisions
