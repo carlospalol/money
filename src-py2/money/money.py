@@ -297,7 +297,7 @@ class XMoney(Money):
     def __floordiv__(self, other):
         if isinstance(other, Money):
             other = other.to(self.currency)
-        return super(XMoney, self.__floordiv__(other)
+        return super(XMoney, self).__floordiv__(other)
     
     def __divmod__(self, other):
         if isinstance(other, Money):
