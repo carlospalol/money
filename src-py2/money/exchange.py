@@ -9,8 +9,10 @@ import importlib
 from .exceptions import ExchangeBackendNotInstalled
 
 
-class BackendBase(metaclass=abc.ABCMeta):
+class BackendBase():
     """Abstract base class API for exchange backends"""
+    __metaclass__ = abc.ABCMeta
+    
     @property
     @abc.abstractmethod
     def base(self):
