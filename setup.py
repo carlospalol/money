@@ -3,7 +3,8 @@ from distutils.core import setup
 
 
 DESCRIPTION = """
-Python money class with optional CLDR-backed locale-aware formatting and an extensible currency exchange solution.
+Python money class with optional CLDR-backed locale-aware formatting 
+and an extensible currency exchange solution.
 """
 
 SOURCE_ROOT = 'src'
