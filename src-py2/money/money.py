@@ -262,47 +262,47 @@ class XMoney(Money):
     def __lt__(self, other):
         if isinstance(other, Money):
             other = other.to(self.currency)
-        return super().__lt__(other)
+        return super(XMoney, self).__lt__(other)
     
     def __le__(self, other):
         if isinstance(other, Money):
             other = other.to(self.currency)
-        return super().__le__(other)
+        return super(XMoney, self).__le__(other)
     
     def __gt__(self, other):
         if isinstance(other, Money):
             other = other.to(self.currency)
-        return super().__gt__(other)
+        return super(XMoney, self).__gt__(other)
     
     def __ge__(self, other):
         if isinstance(other, Money):
             other = other.to(self.currency)
-        return super().__ge__(other)
+        return super(XMoney, self).__ge__(other)
     
     def __add__(self, other):
         if isinstance(other, Money):
             other = other.to(self.currency)
-        return super().__add__(other)
+        return super(XMoney, self).__add__(other)
     
     def __sub__(self, other):
         if isinstance(other, Money):
             other = other.to(self.currency)
-        return super().__sub__(other)
+        return super(XMoney, self).__sub__(other)
     
     def __truediv__(self, other):
         if isinstance(other, Money):
             other = other.to(self.currency)
-        return super().__truediv__(other)
+        return super(XMoney, self).__truediv__(other)
     
     def __floordiv__(self, other):
         if isinstance(other, Money):
             other = other.to(self.currency)
-        return super().__floordiv__(other)
+        return super(XMoney, self.__floordiv__(other)
     
     def __divmod__(self, other):
         if isinstance(other, Money):
             other = other.to(self.currency)
-        return super().__divmod__(other)
+        return super(XMoney, self).__divmod__(other)
 
 
 

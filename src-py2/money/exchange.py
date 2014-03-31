@@ -58,7 +58,7 @@ class SimpleBackend(BackendBase):
         return self._rates.get(currency, None)
     
     def quotation(self, origin, target):
-        return super().quotation(origin, target)
+        return super(SimpleBackend, self).quotation(origin, target)
 
 
 class ExchangeRates(object):

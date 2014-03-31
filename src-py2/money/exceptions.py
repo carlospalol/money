@@ -10,7 +10,7 @@ class CurrencyMismatch(Exception):
         msg = ("unsupported operation between money in '{}' and '{}': '{}'. "
                "Use XMoney for automatic currency conversion."
                ).format(a, b, operation)
-        super().__init__(msg)
+        super(CurrencyMismatch, self).__init__(msg)
 
 
 class ExchangeError(Exception):
@@ -21,13 +21,13 @@ class ExchangeBackendNotInstalled(ExchangeError):
     """No backend installed yet"""
     def __init__(self):
         msg = "use e.g. money.xrates.install('money.exchange.SimpleBackend')"
-        super().__init__(msg)
+        super(ExchangeBackendNotInstalled, self).__init__(msg)
 
 
 class ExchangeRateNotFound(ExchangeError):
     """A rate/quotation was not returned by the backend"""
     def __init__(self, backend, a, b):
         msg = ("rate not found in backend '{}': {}/{}".format(backend, a, b))
-        super().__init__(msg)
+        super(ExchangeRateNotFound, self).__init__(msg)
 
 
