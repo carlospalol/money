@@ -5,7 +5,7 @@ import doctest
 
 
 FILES = (
-    '../../README.rst',
+    '../../../README.rst',
 )
 
 def load_tests(loader, tests, pattern):
