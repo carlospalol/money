@@ -24,6 +24,8 @@ except ImportError:
 
 class Money(object):
     """Money class with a decimal amount and a currency"""
+    __hash__ = None
+    
     def __init__(self, amount="0", currency=None):
         try:
             self.amount = decimal.Decimal(amount)
