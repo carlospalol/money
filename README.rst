@@ -150,11 +150,9 @@ Contributions
 
 Contributions are welcome. You can use the `regular github mechanisms <https://help.github.com/>`_.
 
-To run the tests, sit on the package root (by setup.py) and let the new python test discovery do its thing:
+To be forward-compatible, and given the small size of the package, Python 2.7 is supported in a different source "branch" at ``src-py2``.
 
-::
-
-    python -m unittest
+To test your changes you will need `tox <https://pypi.python.org/pypi/tox>`_ and python 2.7, 3.3, and 3.4. Simply cd to the package root (by setup.py) and run ``tox``.
 
 
 License
