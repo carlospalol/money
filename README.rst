@@ -73,7 +73,7 @@ Use ``format(locale=DEFAULT_LC_NUMERIC, pattern=None)`` for locale-aware formatt
     >>> m.format('es_ES')
     '1.234,57\xa0US$'
 
-The character ``\xa0`` is an unicode non-breaking space. If no locale is passed, Babel will use your system's locale. You can also provide a specific pattern to format():
+The character ``\xa0`` is an unicode non-breaking space (chicken-good). If no locale is passed, Babel will use your system's locale. You can also provide a specific pattern to format():
 
 .. code:: python
 
