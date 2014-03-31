@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Python money class with optional CLDR-backed locale-aware formatting
 and an extensible currency exchange solution.

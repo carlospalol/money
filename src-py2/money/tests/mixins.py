@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Money unittests as mixins for Money and subclasses
 """

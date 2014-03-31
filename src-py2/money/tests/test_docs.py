@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Money doctests as unittest Suite
 """

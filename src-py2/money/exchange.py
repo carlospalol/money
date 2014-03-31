@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Money exchange related classes and ``xrates`` API entry point.
 """
