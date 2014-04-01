@@ -1,2 +1,5 @@
 include LICENSE
 include README.rst
+include CHANGELOG
+recursive-include src *.py
+recursive-include src-py2 *.py

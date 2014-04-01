@@ -1,0 +1,19 @@
+
+1.1.0 
+=====
+
+2014-04-01
+
+- Added tox testing
+- Compatible with Python 2.7, 3.3, 3.4
+
+
+1.0.2
+=====
+
+2013-11-25
+
+- Initial stable version
+- Compatible with Python 3.3
+
+

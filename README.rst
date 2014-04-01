@@ -5,11 +5,19 @@ Python Money
 
 Money class with optional CLDR-backed locale-aware formatting and an extensible currency exchange solution.
 
+All code examples use Python 3.x.
+
+**Contents**
+
+.. contents::
+    :local:
+    :backlinks: none
+
 
 Installation
 ============
 
-*money* requires **python 3.3**
+This package is compatible with Python 2.7, 3.3, 3.4, but there are important `Differences between Python versions`_.
 
 ::
 
@@ -65,7 +73,7 @@ Use ``format(locale=DEFAULT_LC_NUMERIC, pattern=None)`` for locale-aware formatt
     >>> m.format('es_ES')
     '1.234,57\xa0US$'
 
-The character ``\xa0`` is an unicode non-breaking space. If no locale is passed, Babel will use your system's locale. You can also provide a specific pattern to format():
+The character ``\xa0`` is an unicode non-breaking space (chicken-good). If no locale is passed, Babel will use your system's locale. You can also provide a specific pattern to format():
 
 .. code:: python
 
@@ -122,6 +130,25 @@ You can use a subclass of Money, **XMoney** if you prefer automatic conversion b
     assert a + b == XMoney('1.25', 'AAA')
 
 
+.. _python-differences:
+
+Differences between Python versions
+===================================
+
+.. list-table::
+    :header-rows: 1
+    :stub-columns: 1
+    
+    * - Expression
+      - Python 2.x
+      - Python 3.x
+    
+    * - ``round(Money('2.5', 'EUR'))``
+      - Returns ``3.0``, a **float** rounded amount **away from zero**.
+      - Returns ``EUR 2``, a **Money object** with rounded amount to the **nearest even**.
+
+
+
 Design decisions
 ================
 
@@ -149,11 +176,9 @@ Contributions
 
 Contributions are welcome. You can use the `regular github mechanisms <https://help.github.com/>`_.
 
-To run the tests, sit on the package root (by setup.py) and let the new python test discovery do its thing:
+To be forward-compatible, and given the small size of the package, Python 2.7 is supported in a different source "branch" at ``src-py2``.
 
-::
-
-    python -m unittest
+To test your changes you will need `tox <https://pypi.python.org/pypi/tox>`_ and python 2.7, 3.3, and 3.4. Simply cd to the package root (by setup.py) and run ``tox``.
 
 
 License
