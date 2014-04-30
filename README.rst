@@ -40,7 +40,7 @@ Basic usage
     >>> m
     EUR 2.22
 
-*amount* can be any valid value for decimal.Decimal(value) and *currency* should be a three-letter currency code. You can perform most arithmetic operations between money objects and/or numbers (int, float, Decimal).
+*amount* can be any valid value for decimal.Decimal(value) and *currency* should be a three-letter currency code. You can perform most arithmetic operations between money objects and integers or decimals.
 
 .. code:: python
 
@@ -50,6 +50,8 @@ Basic usage
     EUR 1.11
     >>> m + Money('7.77', 'EUR')
     EUR 9.99
+
+Arithmetic operations with floats are not directly supported. If you need to operate with floats, you must first convert the float to a Decimal, or the Money object to a float (i.e. float(m)). Please be aware of the `issues and limitations of floating point arithmetics <https://docs.python.org/3/tutorial/floatingpoint.html>`_.
 
 
 Formatting
