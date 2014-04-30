@@ -116,8 +116,6 @@ class Money(object):
         if isinstance(other, Money):
             raise TypeError("multiplication is unsupported between "
                             "two money objects")
-        if isinstance(other, float):
-            other = decimal.Decimal(other)
         amount = self.amount * other
         return self.__class__(amount, self.currency)
     

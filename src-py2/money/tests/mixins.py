@@ -235,10 +235,6 @@ class NumericOperationsMixin(object):
         result = self.MoneyClass('2', 'XXX') * 2
         self.assertEqual(result, self.MoneyClass('4', 'XXX'))
     
-    def test_mul_float(self):
-        result = self.MoneyClass('2', 'XXX') * 2.0
-        self.assertEqual(result, self.MoneyClass('4', 'XXX'))
-    
     def test_mul_decimal(self):
         result = self.MoneyClass('2', 'XXX') * Decimal(2)
         self.assertEqual(result, self.MoneyClass('4', 'XXX'))
