@@ -227,8 +227,8 @@ class NumericOperationsMixin(object):
             self.MoneyClass(0, 'XXX') - None
     
     def test_rsub_int(self):
-        result = 2 - self.MoneyClass('2', 'XXX')
-        self.assertEqual(result, self.MoneyClass('0', 'XXX'))
+        result = 0 - self.MoneyClass('2', 'XXX')
+        self.assertEqual(result, self.MoneyClass('-2', 'XXX'))
     
     def test_mul_int(self):
         result = self.MoneyClass('2', 'XXX') * 2
