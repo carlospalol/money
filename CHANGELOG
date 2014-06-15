@@ -1,4 +1,12 @@
 
+1.2.1
+=====
+
+2014-06-15
+
+- Fixed bug in __rsub__() (fix by zedlander)
+
+
 1.2.0
 =====
 
