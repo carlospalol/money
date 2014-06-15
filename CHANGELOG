@@ -15,7 +15,15 @@
 - **Multiplication between a Money object and a float does not implicitly convert the float to a Decimal anymore.** (reported by spookylukey)
 
 
-1.1.0 
+1.1.1
+=====
+
+2014-06-15
+
+- Fixed bug in __rsub__() (fix by zedlander)
+
+
+1.1.0
 =====
 
 2014-04-01
