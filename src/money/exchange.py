@@ -10,18 +10,16 @@ from .exceptions import ExchangeBackendNotInstalled
 
 class BackendBase(metaclass=abc.ABCMeta):
     """Abstract base class API for exchange backends"""
+    
     @property
     @abc.abstractmethod
     def base(self):
         """Return the base currency"""
-        return
     
     @abc.abstractmethod
     def rate(self, currency):
         """Return quotation between the base and another currency"""
-        return None
     
-    @abc.abstractmethod
     def quotation(self, origin, target):
         """Return quotation between two currencies (origin, target)"""
         a = self.rate(origin)
@@ -53,9 +51,6 @@ class SimpleBackend(BackendBase):
         if currency == self.base:
             return decimal.Decimal(1)
         return self._rates.get(currency, None)
-    
-    def quotation(self, origin, target):
-        return super().quotation(origin, target)
 
 
 class ExchangeRates(object):
