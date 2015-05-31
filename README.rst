@@ -17,7 +17,7 @@ All code examples use Python 3.x.
 Installation
 ============
 
-This package is compatible with Python 2.7, 3.3, 3.4, but there are important `Differences between Python versions`_.
+This package is compatible with Python 2.7, 3.4, but there are important `Differences between Python versions`_.
 
 ::
 
@@ -97,7 +97,7 @@ The character ``\xa0`` is an unicode non-breaking space (chicken-good). If no lo
 Currency exchange
 =================
 
-Currency exchange works by "installing" a **backend** class that implements the abstract base class (`abc <http://docs.python.org/3.3/library/abc.html>`_) ``money.exchange.BackendBase``. Its API is exposed through ``money.xrates``, along with setup functions ``xrates.install(pythonpath)``, ``xrates.uninstall()``, and ``xrates.backend_name``.
+Currency exchange works by "installing" a **backend** class that implements the abstract base class (`abc <https://docs.python.org/3/library/abc.html>`_) ``money.exchange.BackendBase``. Its API is exposed through ``money.xrates``, along with setup functions ``xrates.install(pythonpath)``, ``xrates.uninstall()``, and ``xrates.backend_name``.
 
 A simple proof-of-concept backend ``money.exchange.SimpleBackend`` is included:
 
@@ -184,7 +184,7 @@ Contributions are welcome. You can use the `regular github mechanisms <https://h
 
 To be forward-compatible, and given the small size of the package, Python 2.7 is supported in a different source "branch" at ``src-py2``.
 
-To test your changes you will need `tox <https://pypi.python.org/pypi/tox>`_ and python 2.7, 3.3, and 3.4. Simply cd to the package root (by setup.py) and run ``tox``.
+To test your changes you will need `tox <https://pypi.python.org/pypi/tox>`_ and python 2.7, 3.4. Simply cd to the package root (by setup.py) and run ``tox``.
 
 
 License
