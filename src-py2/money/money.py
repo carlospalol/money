@@ -6,7 +6,8 @@ import decimal
 import re
 
 from .exchange import xrates
-from .exceptions import CurrencyMismatch, ExchangeRateNotFound
+from .exceptions import (CurrencyMismatch, ExchangeRateNotFound,
+                         InvalidOperandType)
 
 
 __all__ = ['Money', 'XMoney']
@@ -49,18 +50,20 @@ class Money(object):
         return u"{} {:,.2f}".format(self.currency, self.amount)
     
     def __lt__(self, other):
-        if isinstance(other, Money):
-            if other.currency != self.currency:
-                raise CurrencyMismatch(self.currency, other.currency, '<')
-            other = other.amount
-        return self.amount < other
+        if not isinstance(other, Money):
+            raise InvalidOperandType(other, '<')
+        elif other.currency != self.currency:
+            raise CurrencyMismatch(self.currency, other.currency, '<')
+        else:
+            return self.amount < other.amount
     
     def __le__(self, other):
-        if isinstance(other, Money):
-            if other.currency != self.currency:
-                raise CurrencyMismatch(self.currency, other.currency, '<=')
-            other = other.amount
-        return self.amount <= other
+        if not isinstance(other, Money):
+            raise InvalidOperandType(other, '<=')
+        elif other.currency != self.currency:
+            raise CurrencyMismatch(self.currency, other.currency, '<=')
+        else:
+            return self.amount <= other.amount
     
     def __eq__(self, other):
         if isinstance(other, Money):
@@ -72,18 +75,20 @@ class Money(object):
         return not self == other
     
     def __gt__(self, other):
-        if isinstance(other, Money):
-            if other.currency != self.currency:
-                raise CurrencyMismatch(self.currency, other.currency, '>')
-            other = other.amount
-        return self.amount > other
+        if not isinstance(other, Money):
+            raise InvalidOperandType(other, '>')
+        elif other.currency != self.currency:
+            raise CurrencyMismatch(self.currency, other.currency, '>')
+        else:
+            return self.amount > other.amount
     
     def __ge__(self, other):
-        if isinstance(other, Money):
-            if other.currency != self.currency:
-                raise CurrencyMismatch(self.currency, other.currency, '>=')
-            other = other.amount
-        return self.amount >= other
+        if not isinstance(other, Money):
+            raise InvalidOperandType(other, '>=')
+        elif other.currency != self.currency:
+            raise CurrencyMismatch(self.currency, other.currency, '>=')
+        else:
+            return self.amount >= other.amount
     
     def __nonzero__(self):
         """

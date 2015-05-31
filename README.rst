@@ -40,7 +40,7 @@ Basic usage
     >>> m
     EUR 2.22
 
-*amount* can be any valid value for decimal.Decimal(value) and *currency* should be a three-letter currency code. You can perform most arithmetic operations between money objects and integers or decimals.
+*amount* can be any valid value for decimal.Decimal(value) and *currency* should be a three-letter currency code. You can perform most arithmetic operations between money objects, as well as multiplication and division with integers or decimals.
 
 .. code:: python
 
@@ -148,6 +148,10 @@ Differences between Python versions
     * - ``round(Money('2.5', 'EUR'))``
       - Returns ``3.0``, a **float** rounded amount **away from zero**.
       - Returns ``EUR 2``, a **Money object** with rounded amount to the **nearest even**.
+    
+    * - ``Money('0', 'EUR').amount < '0'``
+      - Returns ``True``. This is the weird but expected behaviour in Python 2.x when comparing Decimal objects with non-numerical objects. `See note in docs <https://docs.python.org/2/library/stdtypes.html#comparisons>`_.
+      - TypeError: unorderable types: decimal.Decimal() > str()
 
 
 

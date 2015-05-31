@@ -12,6 +12,16 @@ class CurrencyMismatch(Exception):
         super().__init__(msg)
 
 
+class InvalidOperandType(TypeError):
+    def __init__(self, operand, operation):
+        msg = ("unsupported operation between Money and '{}': '{}'. This "
+               "operation can only be performed with another Money object. "
+               "You can access the amount of a money object 'foo'"
+               " with 'foo.amount' (decimal.Decimal)."
+               ).format(type(operand), operation)
+        super(InvalidOperandType, self).__init__(msg)
+
+
 class ExchangeError(Exception):
     """Generic exception related to exchange rates"""
     pass

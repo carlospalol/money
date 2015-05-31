@@ -8,6 +8,7 @@ import collections
 import unittest
 
 from money import Money, XMoney
+from money.exceptions import InvalidOperandType
 
 
 class ClassMixin(object):
@@ -114,75 +115,54 @@ class ParserMixin(object):
 
 
 class NumericOperationsMixin(object):
-    def test_lt_number(self):
-        self.assertTrue(self.MoneyClass('2.22', 'XXX') < 3)
-        self.assertTrue(self.MoneyClass('2.22', 'XXX') < 3.0)
-        self.assertTrue(self.MoneyClass('2.22', 'XXX') < Decimal(3))
-    
-    def test_lt_money(self):
+    def test_lt(self):
         self.assertTrue(self.MoneyClass('2.219', 'XXX') < self.MoneyClass('2.22', 'XXX'))
         self.assertTrue(self.MoneyClass('-2.22', 'XXX') < self.MoneyClass('2.22', 'XXX'))
+        self.assertFalse(self.MoneyClass('0', 'XXX') < self.MoneyClass('0', 'XXX'))
     
-    def test_lt_none(self):
-        # Py2: it is OK to compare Decimal with None
-        self.assertFalse(self.MoneyClass(0, 'XXX') < None)
+    def test_lt_works_only_with_money(self):
+        with self.assertRaises(InvalidOperandType):
+            self.MoneyClass(0, 'XXX') < Decimal('0')
     
-    def test_le_number(self):
-        self.assertTrue(self.MoneyClass('2.219', 'XXX') <= 3)
-        self.assertTrue(self.MoneyClass('2.219', 'XXX') <= 3.0)
-        self.assertTrue(self.MoneyClass('-2.22', 'XXX') <= Decimal('3'))
-    
-    def test_le_money(self):
+    def test_le(self):
         self.assertTrue(self.MoneyClass('2.219', 'XXX') <= self.MoneyClass('2.22', 'XXX'))
         self.assertTrue(self.MoneyClass('-2.22', 'XXX') <= self.MoneyClass('2.22', 'XXX'))
+        self.assertTrue(self.MoneyClass('0', 'XXX') <= self.MoneyClass('0', 'XXX'))
         self.assertTrue(self.MoneyClass('2.220', 'XXX') <= self.MoneyClass('2.22', 'XXX'))
     
-    def test_le_none(self):
-        # Py2: it is OK to compare Decimal with None
-        self.assertFalse(self.MoneyClass(0, 'XXX') <= None)
+    def test_le_works_only_with_money(self):
+        with self.assertRaises(InvalidOperandType):
+            self.MoneyClass(0, 'XXX') <= Decimal('0')
     
     def test_eq(self):
         self.assertEqual(self.MoneyClass('2', 'XXX'), self.MoneyClass('2', 'XXX'))
         self.assertEqual(self.MoneyClass('2.22000', 'XXX'), self.MoneyClass('2.22', 'XXX'))
     
     def test_ne(self):
-        self.assertNotEqual(self.MoneyClass('0', 'XXX'), 0)
-        self.assertNotEqual(self.MoneyClass('2', 'XXX'), 2)
-        self.assertNotEqual(self.MoneyClass('2', 'XXX'), 'two')
-    
-    def test_ne_money(self):
-        self.assertNotEqual(self.MoneyClass('2', 'XXX'), self.MoneyClass('3', 'XXX'))
+        self.assertNotEqual(self.MoneyClass('0', 'XXX'), self.MoneyClass('2', 'XXX'))
+        self.assertNotEqual(self.MoneyClass('2.22001', 'XXX'), self.MoneyClass('2.22', 'XXX'))
         self.assertNotEqual(self.MoneyClass('2', 'XXX'), self.MoneyClass('2', 'YYY'))
     
-    def test_ne_none(self):
-        self.assertNotEqual(self.MoneyClass(0, 'XXX'), None)
+    def test_ne_if_not_money(self):
+        self.assertNotEqual(self.MoneyClass(0, 'XXX'), Decimal('0'))
     
-    def test_gt_number(self):
-        self.assertTrue(self.MoneyClass('2.22', 'XXX') > 2)
-        self.assertTrue(self.MoneyClass('2.22', 'XXX') > Decimal('2'))
-    
-    def test_gt_money(self):
+    def test_gt(self):
         self.assertTrue(self.MoneyClass('2.22', 'XXX') > self.MoneyClass('2.219', 'XXX'))
         self.assertTrue(self.MoneyClass('2.22', 'XXX') > self.MoneyClass('-2.22', 'XXX'))
+        self.assertFalse(self.MoneyClass('0', 'XXX') > self.MoneyClass('0', 'XXX'))
     
-    def test_gt_none(self):
-        # Py2: it is OK to compare Decimal with None
-        self.assertTrue(self.MoneyClass(0, 'XXX') > None)
+    def test_gt_works_only_with_money(self):
+        with self.assertRaises(InvalidOperandType):
+            self.MoneyClass(0, 'XXX') > Decimal('0')
     
-    def test_ge_number(self):
-        self.assertTrue(self.MoneyClass('2', 'XXX') >= 1)
-        self.assertTrue(self.MoneyClass('2', 'XXX') >= 2)
-        self.assertTrue(self.MoneyClass('2', 'XXX') >= Decimal('1'))
-        self.assertTrue(self.MoneyClass('2', 'XXX') >= Decimal('2'))
-    
-    def test_ge_money(self):
+    def test_ge(self):
         self.assertTrue(self.MoneyClass('2.22', 'XXX') >= self.MoneyClass('2.219', 'XXX'))
         self.assertTrue(self.MoneyClass('2.22', 'XXX') >= self.MoneyClass('-2.22', 'XXX'))
         self.assertTrue(self.MoneyClass('2.22', 'XXX') >= self.MoneyClass('2.22', 'XXX'))
     
-    def test_ge_none(self):
-        # Py2: it is OK to compare Decimal with None
-        self.assertTrue(self.MoneyClass(0, 'XXX') >= None)
+    def test_ge_works_only_with_money(self):
+        with self.assertRaises(InvalidOperandType):
+            self.MoneyClass(0, 'XXX') >= Decimal('0')
     
     def test_bool_true(self):
         self.assertTrue(self.MoneyClass('2.22', 'XXX'))
