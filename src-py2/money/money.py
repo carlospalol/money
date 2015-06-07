@@ -208,6 +208,9 @@ class Money(object):
     def __round__(self, ndigits=0):
         return self.__class__(round(self.amount, ndigits), self.currency)
     
+    def __composite_values__(self):
+        return self.amount, self.currency
+    
     def to(self, currency):
         """Return equivalent money object in another currency"""
         if currency == self.currency:

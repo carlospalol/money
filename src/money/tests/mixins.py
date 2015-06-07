@@ -350,6 +350,9 @@ class UnaryOperationsReturnNewMixin(object):
     
     def test_round(self):
         self.assertIsNot(round(self.money), self.money)
+    
+    def test_sqlalchemy_composite_values(self):
+        self.assertEqual((Decimal(2), 'XXX'), self.money.__composite_values__())
 
 
 class LeftmostTypePrevailsMixin(object):
