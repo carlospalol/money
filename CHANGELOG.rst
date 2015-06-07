@@ -1,3 +1,4 @@
+.. RADAR: version
 
 
 1.3

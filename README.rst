@@ -17,7 +17,16 @@ All code examples use Python 3.x.
 Installation
 ============
 
+.. RADAR: version
+
+**This is version 1.3.0**.
+
+:Development: https://github.com/carlospalol/money
+:Latest release: https://pypi.python.org/pypi/money/
+
 This package is compatible with Python 2.7, 3.4, but there are important `Differences between Python versions`_.
+
+Install the latest release with:
 
 ::
 

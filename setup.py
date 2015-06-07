@@ -18,6 +18,7 @@ setup(
     name='money',
     description='Python Money Class',
     # long_description=DESCRIPTION,
+    # RADAR: version
     version='1.3.0',
     author='Carlos Palol',
     author_email='carlos.palol@awarepixel.com',

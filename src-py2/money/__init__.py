@@ -7,4 +7,5 @@ from .money import Money, XMoney
 from .exchange import xrates
 
 
-__version__ = '1.2.1'
+# RADAR: version
+__version__ = '1.3.0'
