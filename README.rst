@@ -19,7 +19,7 @@ Installation
 
 .. RADAR: version
 
-**This is version 1.3.0**.
+**This is version 1.3.0-dev**.
 
 :Development: https://github.com/carlospalol/money
 :Latest release: https://pypi.python.org/pypi/money/
