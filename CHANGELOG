@@ -1,3 +1,10 @@
+1.2.2
+=====
+
+2014-06-15
+
+- Support for SQLAlchemy composite columns (@dahlia)
+
 
 1.2.1
 =====
