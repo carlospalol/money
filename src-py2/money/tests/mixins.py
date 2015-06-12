@@ -6,6 +6,7 @@ import abc
 from decimal import Decimal
 import collections
 import unittest
+import pickle
 
 from money import Money, XMoney
 from money.exceptions import InvalidOperandType
@@ -54,9 +55,29 @@ class ClassMixin(object):
         with self.assertRaises(ValueError):
             money = self.MoneyClass('twenty', 'XXX')
     
-    def test_not_hashable(self):
+    def test_immutable_by_convention(self):
+        money = self.MoneyClass('2', 'XXX')
+        with self.assertRaises(AttributeError):
+            money.amount += 1
+        with self.assertRaises(AttributeError):
+            money.currency = 'YYY'
+    
+    def test_hashable(self):
         money = self.MoneyClass('2.22', 'XXX')
-        self.assertFalse(isinstance(money, collections.Hashable))
+        self.assertTrue(isinstance(money, collections.Hashable))
+    
+    def test_hash_eq(self):
+        money = self.MoneyClass('2.22', 'XXX')
+        money_set = set([money, money])
+        self.assertEqual(len(money_set), 1)
+    
+    def test_hash_int(self):
+        money = self.MoneyClass('2.22', 'XXX')
+        self.assertEqual(type(hash(money)), int)
+    
+    def test_pickable(self):
+        money = self.MoneyClass('2.22', 'XXX')
+        self.assertEqual(pickle.loads(pickle.dumps(money)), money)
 
 
 class RepresentationsMixin(object):
@@ -136,12 +157,20 @@ class NumericOperationsMixin(object):
     
     def test_eq(self):
         self.assertEqual(self.MoneyClass('2', 'XXX'), self.MoneyClass('2', 'XXX'))
+        self.assertEqual(hash(self.MoneyClass('2', 'XXX')), hash(self.MoneyClass('2', 'XXX')))
+        
         self.assertEqual(self.MoneyClass('2.22000', 'XXX'), self.MoneyClass('2.22', 'XXX'))
+        self.assertEqual(hash(self.MoneyClass('2.22000', 'XXX')), hash(self.MoneyClass('2.22', 'XXX')))
     
     def test_ne(self):
         self.assertNotEqual(self.MoneyClass('0', 'XXX'), self.MoneyClass('2', 'XXX'))
+        self.assertNotEqual(hash(self.MoneyClass('0', 'XXX')), hash(self.MoneyClass('2', 'XXX')))
+        
         self.assertNotEqual(self.MoneyClass('2.22001', 'XXX'), self.MoneyClass('2.22', 'XXX'))
+        self.assertNotEqual(hash(self.MoneyClass('2.22001', 'XXX')), hash(self.MoneyClass('2.22', 'XXX')))
+        
         self.assertNotEqual(self.MoneyClass('2', 'XXX'), self.MoneyClass('2', 'YYY'))
+        self.assertNotEqual(hash(self.MoneyClass('2', 'XXX')), hash(self.MoneyClass('2', 'YYY')))
     
     def test_ne_if_not_money(self):
         self.assertNotEqual(self.MoneyClass(0, 'XXX'), Decimal('0'))
