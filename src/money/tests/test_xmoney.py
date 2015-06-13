@@ -6,6 +6,7 @@ import unittest
 
 from money import XMoney, xrates
 from money.money import BABEL_AVAILABLE
+from money.exceptions import CurrencyMismatch
 from .mixins import *
 
 
@@ -51,27 +52,31 @@ class TestXMoneyAutoConversion(unittest.TestCase):
         self.ax = XMoney('20', 'AAA')
         self.bx = XMoney('80', 'BBB')
     
-    def test_lt(self):
-        self.assertTrue(self.b < self.a)
-        self.assertFalse(self.a < self.b)
-        self.assertFalse(self.ax < self.bx)
+    def test_lt_deprecated(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.assertTrue(self.b < self.a)
+            self.assertFalse(self.a < self.b)
+            self.assertFalse(self.ax < self.bx)
     
-    def test_le(self):
-        self.assertTrue(self.b <= self.a)
-        self.assertFalse(self.a <= self.b)
-        self.assertTrue(self.ax <= self.bx)
-        self.assertTrue(self.bx <= self.ax)
+    def test_le_deprecated(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.assertTrue(self.b <= self.a)
+            self.assertFalse(self.a <= self.b)
+            self.assertTrue(self.ax <= self.bx)
+            self.assertTrue(self.bx <= self.ax)
     
-    def test_gt(self):
-        self.assertTrue(self.a > self.b)
-        self.assertFalse(self.b > self.a)
-        self.assertFalse(self.ax > self.bx)
+    def test_gt_deprecated(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.assertTrue(self.a > self.b)
+            self.assertFalse(self.b > self.a)
+            self.assertFalse(self.ax > self.bx)
     
-    def test_ge(self):
-        self.assertTrue(self.a >= self.b)
-        self.assertFalse(self.b >= self.a)
-        self.assertTrue(self.ax >= self.bx)
-        self.assertTrue(self.bx >= self.ax)
+    def test_ge_deprecated(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.assertTrue(self.a >= self.b)
+            self.assertFalse(self.b >= self.a)
+            self.assertTrue(self.ax >= self.bx)
+            self.assertTrue(self.bx >= self.ax)
     
     def test_add(self):
         self.assertEqual(self.a + self.b, XMoney('12.5', 'AAA'))
