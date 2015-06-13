@@ -3,7 +3,12 @@ Money exceptions
 """
 
 
-class CurrencyMismatch(Exception):
+class MoneyException(Exception):
+    """Generic money exception"""
+    pass
+
+
+class CurrencyMismatch(MoneyException, ValueError):
     """Invalid operation between money objects of different currencies"""
     def __init__(self, a, b, operation):
         msg = ("unsupported operation between money in '{}' and '{}': '{}'. "
@@ -12,7 +17,7 @@ class CurrencyMismatch(Exception):
         super().__init__(msg)
 
 
-class InvalidOperandType(TypeError):
+class InvalidOperandType(MoneyException, TypeError):
     def __init__(self, operand, operation):
         msg = ("unsupported operation between Money and '{}': '{}'. This "
                "operation can only be performed with another Money object. "
@@ -22,7 +27,7 @@ class InvalidOperandType(TypeError):
         super(InvalidOperandType, self).__init__(msg)
 
 
-class ExchangeError(Exception):
+class ExchangeError(MoneyException):
     """Generic exception related to exchange rates"""
     pass
 

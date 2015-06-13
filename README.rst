@@ -155,6 +155,43 @@ You can use a subclass of Money, **XMoney** if you prefer automatic conversion b
     assert a + b == XMoney('1.25', 'AAA')
 
 
+
+Exceptions
+==========
+
+Found in ``money.exceptions``.
+
+``MoneyException(Exception)``
+    Base class for all exceptions.
+
+``CurrencyMismatch(MoneyException, ValueError)``
+    Thrown when mixing different curencies, e.g. ``Money(2, 'EUR') + Money(2, 'USD')``. Money objects must be converted first to the same currency, or XMoney could be used for automatic conversion.
+
+``InvalidOperandType(MoneyException, TypeError)``
+    Thrown when attempting invalid operations, e.g. multiplication between money objects.
+
+``ExchangeError(MoneyException)``
+    Base class for exchange exceptions.
+
+``ExchangeBackendNotInstalled(ExchangeError)``
+    Thrown if a conversion is attempted, but there is no backend available.
+
+``ExchangeRateNotFound(ExchangeError)``
+    The installed backend failed to provide a suitable exchange rate between the origin and target currencies.
+
+
+Hierarchy
+---------
+
+* ``MoneyException``
+    * ``CurrencyMismatch``
+    * ``InvalidOperandType``
+    * ``ExchangeError``
+        * ``ExchangeBackendNotInstalled``
+        * ``ExchangeRateNotFound``
+
+
+
 .. _python-differences:
 
 Differences between Python versions
