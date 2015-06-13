@@ -10,6 +10,11 @@
 2015-05-31
 
 + Dropped support for Python 3.3
+
++ XMoney now only attempts automatic currency conversion in addition, substraction, and division.
+
+  Before, XMoney would convert currencies in comparison, including >= and <=, with results that were inconsistent with ==.
+
 + Comparison operators ``<``, ``<=``, ``>``, ``>=`` now throw ``InvalidOperandType`` (TypeError) if the operand is not a Money object. Code that relies on this should be updated to access the amount value explicitly (see example below). 
 
 .. code:: python

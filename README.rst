@@ -141,7 +141,12 @@ A simple proof-of-concept backend ``money.exchange.SimpleBackend`` is included:
     assert b.to('AAA') == Money('0.25', 'AAA')
     assert a + b.to('AAA') == Money('1.25', 'AAA')
 
-You can use a subclass of Money, **XMoney** if you prefer automatic conversion between different currencies on binary operations. The currency of the leftmost object has priority.
+
+
+XMoney
+======
+
+You can use ``money.XMoney`` (a subclass of Money), for automatic currency conversion while adding, substracting, and dividing money objects (+, +=, -, -=, /, //). This is useful when aggregating lots of money objects with heterogeneous currencies. The currency of the leftmost object has priority.
 
 .. code:: python
 
@@ -151,9 +156,8 @@ You can use a subclass of Money, **XMoney** if you prefer automatic conversion b
     
     a = XMoney(1, 'AAA')
     b = XMoney(1, 'BBB')
-
-    assert a + b == XMoney('1.25', 'AAA')
-
+    
+    assert sum([a, b]) == XMoney('1.25', 'AAA')
 
 
 Exceptions

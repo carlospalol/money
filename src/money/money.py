@@ -276,26 +276,6 @@ class Money(object):
 
 class XMoney(Money):
     """Money subclass with implicit currency conversion"""
-    def __lt__(self, other):
-        if isinstance(other, Money):
-            other = other.to(self._currency)
-        return super().__lt__(other)
-    
-    def __le__(self, other):
-        if isinstance(other, Money):
-            other = other.to(self._currency)
-        return super().__le__(other)
-    
-    def __gt__(self, other):
-        if isinstance(other, Money):
-            other = other.to(self._currency)
-        return super().__gt__(other)
-    
-    def __ge__(self, other):
-        if isinstance(other, Money):
-            other = other.to(self._currency)
-        return super().__ge__(other)
-    
     def __add__(self, other):
         if isinstance(other, Money):
             other = other.to(self._currency)
