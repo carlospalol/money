@@ -169,7 +169,7 @@ Found in ``money.exceptions``.
     Base class for all exceptions.
 
 ``CurrencyMismatch(MoneyException, ValueError)``
-    Thrown when mixing different curencies, e.g. ``Money(2, 'EUR') + Money(2, 'USD')``. Money objects must be converted first to the same currency, or XMoney could be used for automatic conversion.
+    Thrown when mixing different currencies, e.g. ``Money(2, 'EUR') + Money(2, 'USD')``. Money objects must be converted first to the same currency, or XMoney could be used for automatic conversion.
 
 ``InvalidOperandType(MoneyException, TypeError)``
     Thrown when attempting invalid operations, e.g. multiplication between money objects.
