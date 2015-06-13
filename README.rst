@@ -5,6 +5,13 @@ Python Money
 
 Money class with optional CLDR-backed locale-aware formatting and an extensible currency exchange solution.
 
+.. RADAR: version
+
+**This is version 1.3.0-dev**.
+
+:Development: https://github.com/carlospalol/money
+:Latest release: https://pypi.python.org/pypi/money/
+
 This package is compatible with Python 2.7, 3.4 (tested in 2.7.9, 3.4.3), but there are important `Differences between Python versions`_. All code examples use Python 3.x.
 
 **Contents**
@@ -16,13 +23,6 @@ This package is compatible with Python 2.7, 3.4 (tested in 2.7.9, 3.4.3), but th
 
 Installation
 ============
-
-.. RADAR: version
-
-**This is version 1.3.0-dev**.
-
-:Development: https://github.com/carlospalol/money
-:Latest release: https://pypi.python.org/pypi/money/
 
 Install the latest release with:
 
