@@ -17,17 +17,17 @@
 
 + Comparison operators ``<``, ``<=``, ``>``, ``>=`` now throw ``InvalidOperandType`` (TypeError) if the operand is not a Money object. Code that relies on this should be updated to access the amount value explicitly (see example below). 
 
-.. code:: python
-
-	>>> m = Money(2, 'USD')
-	
-	# old code
-	>>> m > 0
-	(raises InvalidOperandType)
-	
-	# 1.3.x
-	>>> m.amount > 0
-	True
+  .. code:: python
+  
+  	>>> m = Money(2, 'USD')
+  
+  	# old code
+  	>>> m > 0
+  	(raises InvalidOperandType)
+  
+  	# 1.3.x
+  	>>> m.amount > 0
+  	True
 
 
 1.2
