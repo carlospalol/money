@@ -47,20 +47,45 @@ Usage
     >>> m
     EUR 2.22
 
-*amount* can be any valid value for decimal.Decimal(value) and *currency* should be a three-letter currency code. You can perform most arithmetic operations between money objects, as well as multiplication and division with integers or decimals.
+*amount* can be any valid value in ``decimal.Decimal(value)`` and *currency* should be a three-letter currency code. Money objects are immutable by convention and hashable. Once created, you can use read-only properties ``amount`` (decimal.Decimal) and ``currency`` (str) to access its internal components:
 
 .. code:: python
 
-    >>> from money import Money
+    >>> m = Money(2, 'USD')
+    >>> m.amount
+    Decimal('2')
+    >>> m.currency
+    'USD'
+
+Money emulates a numeric type and you can apply most arithmetic and comparison operators between money objects, as well as addition, subtraction, and division with integers (int) and decimal numbers (decimal.Decimal):
+
+.. code:: python
+
     >>> m = Money('2.22', 'EUR')
     >>> m / 2
     EUR 1.11
     >>> m + Money('7.77', 'EUR')
     EUR 9.99
 
-Arithmetic operations with floats are not directly supported. If you need to operate with floats, you must first convert the float to a Decimal, or the Money object to a float (i.e. float(m)). Please be aware of the `issues and limitations of floating point arithmetics <https://docs.python.org/3/tutorial/floatingpoint.html>`_.
+More formally, with *AAA* and *BBB* being different currencies:
 
-Money objects are immutable by convention and hashable. Once created, you can use read-only properties ``amount`` (decimal.Decimal) and ``currency`` (str) to access its internal components.
++-----------+---------------+-----------+-----------+-----------------+
+|           | Operator      | Money AAA | Money BBB | int, Decimal    |
++===========+===============+===========+===========+=================+
+| **Money   | ``+``, ``-``  | Money     | N/A       | Money           |
++ AAA**     +---------------+-----------+-----------+-----------------+
+|           | ``*``         | N/A       | N/A       | Money           |
++           +---------------+-----------+-----------+-----------------+
+|           | ``/``, ``//`` | Decimal   | N/A       | Money           |
++           +---------------+-----------+-----------+-----------------+
+|           | ``>``, ``>=`` | Compares  | N/A       | N/A             |
+|           | ``<``, ``<=`` | amount.   |           |                 |
++           +---------------+           +-----------+-----------------+
+|           | ``==``        |           | False     | False           |
+|           |               |           |           |                 |
++-----------+---------------+-----------+-----------+-----------------+
+
+Arithmetic operations with floats are not directly supported. If you need to operate with floats, you must first convert the float to a Decimal, or the Money object to a float (i.e. float(m)). Please be aware of the `issues and limitations of floating point arithmetics <https://docs.python.org/3/tutorial/floatingpoint.html>`_.
 
 
 Currency presets
@@ -146,7 +171,7 @@ A simple proof-of-concept backend ``money.exchange.SimpleBackend`` is included:
 XMoney
 ======
 
-You can use ``money.XMoney`` (a subclass of Money), for automatic currency conversion while adding, substracting, and dividing money objects (+, +=, -, -=, /, //). This is useful when aggregating lots of money objects with heterogeneous currencies. The currency of the leftmost object has priority.
+You can use ``money.XMoney`` (a subclass of Money), for automatic currency conversion while adding, subtracting, and dividing money objects (+, +=, -, -=, /, //). This is useful when aggregating lots of money objects with heterogeneous currencies. The currency of the leftmost object has priority.
 
 .. code:: python
 
@@ -214,7 +239,7 @@ Differences between Python versions
       - Returns ``EUR 2``, a **Money object** with rounded amount to the **nearest even**.
     
     * - ``Money('0', 'EUR').amount < '0'``
-      - Returns ``True``. This is the weird but expected behaviour in Python 2.x when comparing Decimal objects with non-numerical objects. `See note in docs <https://docs.python.org/2/library/stdtypes.html#comparisons>`_.
+      - Returns ``True``. This is the weird but expected behaviour in Python 2.x when comparing Decimal objects with non-numerical objects (Note the '0' is a string). `See note in docs <https://docs.python.org/2/library/stdtypes.html#comparisons>`_.
       - TypeError: unorderable types: decimal.Decimal() > str()
 
 
