@@ -26,15 +26,7 @@ class TestXMoneyParser(ParserMixin, unittest.TestCase):
 
 class TestXMoneyNumericOperations(NumericOperationsMixin, unittest.TestCase):
     MoneyClass = XMoney
-
-class TestXMoneyUnaryOperationsReturnNew(UnaryOperationsReturnNewMixin, unittest.TestCase):
-    MoneyClass = XMoney
-
-class TestXMoneyLeftmostTypePrevails(LeftmostTypePrevailsMixin, unittest.TestCase):
-    MoneyClass = XMoney
-
-
-class TestXMoneyAutoConversion(unittest.TestCase):
+    
     @classmethod
     def setUpClass(cls):
         xrates.install('money.exchange.SimpleBackend')
@@ -53,49 +45,23 @@ class TestXMoneyAutoConversion(unittest.TestCase):
         self.ax = XMoney('20', 'AAA')
         self.bx = XMoney('80', 'BBB')
     
-    def test_lt_deprecated(self):
-        with self.assertRaises(CurrencyMismatch):
-            self.assertTrue(self.b < self.a)
-            self.assertFalse(self.a < self.b)
-            self.assertFalse(self.ax < self.bx)
-    
-    def test_le_deprecated(self):
-        with self.assertRaises(CurrencyMismatch):
-            self.assertTrue(self.b <= self.a)
-            self.assertFalse(self.a <= self.b)
-            self.assertTrue(self.ax <= self.bx)
-            self.assertTrue(self.bx <= self.ax)
-    
-    def test_gt_deprecated(self):
-        with self.assertRaises(CurrencyMismatch):
-            self.assertTrue(self.a > self.b)
-            self.assertFalse(self.b > self.a)
-            self.assertFalse(self.ax > self.bx)
-    
-    def test_ge_deprecated(self):
-        with self.assertRaises(CurrencyMismatch):
-            self.assertTrue(self.a >= self.b)
-            self.assertFalse(self.b >= self.a)
-            self.assertTrue(self.ax >= self.bx)
-            self.assertTrue(self.bx >= self.ax)
-    
-    def test_add(self):
+    def test_add_money_different_currency(self):
         self.assertEqual(self.a + self.b, XMoney('12.5', 'AAA'))
         self.assertEqual(self.b + self.a, XMoney('50', 'BBB'))
     
-    def test_sub(self):
+    def test_sub_money_different_currency(self):
         self.assertEqual(self.a - self.b, XMoney('7.5', 'AAA'))
         self.assertEqual(self.b - self.a, XMoney('-30', 'BBB'))
     
-    def test_truediv(self):
+    def test_truediv_money_different_currency(self):
         self.assertEqual(self.a / self.b, Decimal('4'))
         self.assertEqual(self.b / self.a, Decimal('0.25'))
     
-    def test_floordiv(self):
+    def test_floordiv_money_different_currency(self):
         self.assertEqual(self.a // self.b, Decimal('4'))
         self.assertEqual(self.b // self.a, Decimal('0'))
     
-    def test_divmod(self):
+    def test_divmod_money_different_currency(self):
         whole, remainder = divmod(self.a, self.b)
         self.assertEqual(whole, Decimal('4'))
         self.assertEqual(remainder, Decimal('0'))
@@ -103,5 +69,11 @@ class TestXMoneyAutoConversion(unittest.TestCase):
         self.assertEqual(whole, Decimal('0'))
         self.assertEqual(remainder, Decimal('10'))
 
+
+class TestXMoneyUnaryOperationsReturnNew(UnaryOperationsReturnNewMixin, unittest.TestCase):
+    MoneyClass = XMoney
+
+class TestXMoneyLeftmostTypePrevails(LeftmostTypePrevailsMixin, unittest.TestCase):
+    MoneyClass = XMoney
 
 

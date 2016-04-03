@@ -10,6 +10,7 @@ import pickle
 
 from money import Money, XMoney
 from money.exceptions import InvalidOperandType
+from money.exceptions import CurrencyMismatch
 
 
 class ClassMixin(object):
@@ -145,6 +146,10 @@ class NumericOperationsMixin(object):
         with self.assertRaises(InvalidOperandType):
             self.MoneyClass(0, 'XXX') < Decimal('0')
     
+    def test_lt_money_different_currency(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.MoneyClass(2, 'AAA') < self.MoneyClass(2, 'BBB')
+    
     def test_le(self):
         self.assertTrue(self.MoneyClass('2.219', 'XXX') <= self.MoneyClass('2.22', 'XXX'))
         self.assertTrue(self.MoneyClass('-2.22', 'XXX') <= self.MoneyClass('2.22', 'XXX'))
@@ -154,6 +159,10 @@ class NumericOperationsMixin(object):
     def test_le_works_only_with_money(self):
         with self.assertRaises(InvalidOperandType):
             self.MoneyClass(0, 'XXX') <= Decimal('0')
+    
+    def test_le_money_different_currency(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.MoneyClass(2, 'AAA') <= self.MoneyClass(2, 'BBB')
     
     def test_eq(self):
         self.assertEqual(self.MoneyClass('2', 'XXX'), self.MoneyClass('2', 'XXX'))
@@ -184,6 +193,10 @@ class NumericOperationsMixin(object):
         with self.assertRaises(InvalidOperandType):
             self.MoneyClass(0, 'XXX') > Decimal('0')
     
+    def test_gt_money_different_currency(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.MoneyClass(2, 'AAA') > self.MoneyClass(2, 'BBB')
+    
     def test_ge(self):
         self.assertTrue(self.MoneyClass('2.22', 'XXX') >= self.MoneyClass('2.219', 'XXX'))
         self.assertTrue(self.MoneyClass('2.22', 'XXX') >= self.MoneyClass('-2.22', 'XXX'))
@@ -192,6 +205,10 @@ class NumericOperationsMixin(object):
     def test_ge_works_only_with_money(self):
         with self.assertRaises(InvalidOperandType):
             self.MoneyClass(0, 'XXX') >= Decimal('0')
+    
+    def test_ge_money_different_currency(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.MoneyClass(2, 'AAA') >= self.MoneyClass(2, 'BBB')
     
     def test_bool_true(self):
         self.assertTrue(self.MoneyClass('2.22', 'XXX'))
@@ -212,6 +229,10 @@ class NumericOperationsMixin(object):
         result = self.MoneyClass('2', 'XXX') + self.MoneyClass('2', 'XXX')
         self.assertEqual(result, self.MoneyClass('4', 'XXX'))
     
+    def test_add_money_different_currency(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.MoneyClass(2, 'AAA') + self.MoneyClass(2, 'BBB')
+    
     def test_add_none(self):
         with self.assertRaises(TypeError):
             self.MoneyClass(0, 'XXX') + None
@@ -231,6 +252,10 @@ class NumericOperationsMixin(object):
     def test_sub_money(self):
         result = self.MoneyClass('2', 'XXX') - self.MoneyClass('2', 'XXX')
         self.assertEqual(result, self.MoneyClass('0', 'XXX'))
+    
+    def test_sub_money_different_currency(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.MoneyClass(2, 'AAA') - self.MoneyClass(2, 'BBB')
     
     def test_sub_none(self):
         with self.assertRaises(TypeError):
@@ -272,6 +297,10 @@ class NumericOperationsMixin(object):
         result = self.MoneyClass('2', 'XXX') / self.MoneyClass('2', 'XXX')
         self.assertEqual(result, Decimal('1'))
     
+    def test_truediv_money_different_currency(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.MoneyClass(2, 'AAA') / self.MoneyClass(2, 'BBB')
+    
     def test_truediv_none(self):
         with self.assertRaises(TypeError):
             self.MoneyClass(2, 'XXX') / None
@@ -287,6 +316,10 @@ class NumericOperationsMixin(object):
     def test_floordiv_money(self):
         result = self.MoneyClass('2.22', 'XXX') // self.MoneyClass('2', 'XXX')
         self.assertEqual(result, Decimal('1'))
+    
+    def test_floordiv_money_different_currency(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.MoneyClass('2.22', 'AAA') // self.MoneyClass('2', 'BBB')
     
     def test_floordiv_none(self):
         with self.assertRaises(TypeError):
@@ -321,6 +354,10 @@ class NumericOperationsMixin(object):
         whole, remainder = divmod(self.MoneyClass('2.22', 'XXX'), self.MoneyClass('2', 'XXX'))
         self.assertEqual(whole, Decimal('1'))
         self.assertEqual(remainder, Decimal('0.22'))
+    
+    def test_divmod_money_different_currency(self):
+        with self.assertRaises(CurrencyMismatch):
+            divmod(self.MoneyClass('2.22', 'AAA'), self.MoneyClass('2', 'BBB'))
     
     def test_divmod_none(self):
         with self.assertRaises(TypeError):
