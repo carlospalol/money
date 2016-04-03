@@ -12,7 +12,7 @@ Money class with optional CLDR-backed locale-aware formatting and an extensible 
 :Development: https://github.com/carlospalol/money
 :Latest release: https://pypi.python.org/pypi/money/
 
-This package is compatible with Python 2.7, 3.4 (tested in 2.7.9, 3.4.3), but there are important `Differences between Python versions`_. All code examples use Python 3.x.
+This package is compatible with Python 2.7, 3.4, 3.5 (tested in 2.7.11, 3.4.4, 3.5.1), but there are important `Differences between Python versions`_. All code examples use Python 3.x.
 
 **Contents**
 
@@ -273,7 +273,7 @@ Contributions are welcome. You can use the `regular github mechanisms <https://h
 
 To be forward-compatible, and given the small size of the package, Python 2.7 is supported in a different source "branch" at ``src-py2``.
 
-To test your changes you will need `tox <https://pypi.python.org/pypi/tox>`_ and python 2.7, 3.4. Simply cd to the package root (by setup.py) and run ``tox``.
+To test your changes you will need `tox <https://pypi.python.org/pypi/tox>`_ and python 2.7, 3.4, and 3.5. Simply cd to the package root (by setup.py) and run ``tox``.
 
 
 License
