@@ -36,7 +36,7 @@
 1.2.3 (2016-04-17)
 ------------------
 
-+ Throw an exception if used with Babel 2.2 or higher.
++ Throw an exception if used with Babel 2.2 or higher (reported by `chrisrossi <https://github.com/chrisrossi>`_).
 
 
 1.2.2 (2015-06-09)
