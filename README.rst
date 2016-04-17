@@ -30,7 +30,7 @@ Install the latest release with:
 
     pip install money
 
-For locale-aware formatting, also install `Babel <https://pypi.python.org/pypi/Babel>`_:
+For locale-aware formatting, also install the latest version of `Babel <https://pypi.python.org/pypi/Babel>`_ (2.2 or higher required):
 
 ::
 
@@ -113,7 +113,7 @@ Money objects are printed by default with en_US formatting and the currency code
     >>> str(m)
     'EUR 1,234.57'
 
-Use ``format(locale=DEFAULT_LC_NUMERIC, pattern=None)`` for locale-aware formatting with currency expansion. ``format()`` emulates ``babel.numbers.format_currency()``, and **requires Babel** to be installed:
+Use ``format(locale=LC_NUMERIC, pattern=None, currency_digits=True, format_type='standard')`` for locale-aware formatting with currency expansion. ``format()`` relies on ``babel.numbers.format_currency()``, and **requires Babel** 2.2 or higher to be installed.
 
 .. code:: python
 
@@ -121,9 +121,9 @@ Use ``format(locale=DEFAULT_LC_NUMERIC, pattern=None)`` for locale-aware formatt
     >>> m.format('en_US')
     '$1,234.57'
     >>> m.format('es_ES')
-    '1.234,57\xa0US$'
+    '1.234,57\xa0$'
 
-The character ``\xa0`` is an unicode non-breaking space (chicken-good). If no locale is passed, Babel will use your system's locale. You can also provide a specific pattern to format():
+The character ``\xa0`` is an unicode non-breaking space. If no locale is passed, Babel will use your system's locale. You can also provide a specific pattern to format():
 
 .. code:: python
 
@@ -134,13 +134,14 @@ The character ``\xa0`` is an unicode non-breaking space (chicken-good). If no lo
     >>> # Custom negative format:
     >>> m.format('en_US', '¤#,##0.00;<¤#,##0.00>')
     '<$1,234.57>'
-    >>> # Round, Spanish format, full currency name:
-    >>> m.format('es_ES', '0 ¤¤¤')
+    >>> # Spanish format, full currency name:
+    >>> m.format('es_ES', '#,##0.00 ¤¤¤')
+    '-1.234,57 dólares estadounidenses'
+    >>> # Same as above, but rounding (overriding currency natural format):
+    >>> m.format('es_ES', '#0 ¤¤¤', currency_digits=False)
     '-1235 dólares estadounidenses'
 
-
-`Learn more about the formatting syntax: <http://www.unicode.org/reports/tr35/tr35-numbers.html#Number_Format_Patterns>`_.
-
+For more details on formatting see `Babel docs on currency formatting <http://babel.pocoo.org/en/latest/api/numbers.html#babel.numbers.format_currency>`_. To learn more about the formatting pattern syntax check out `Unicode TR35 <http://www.unicode.org/reports/tr35/tr35-numbers.html#Number_Format_Patterns>`_.
 
 Currency exchange
 =================

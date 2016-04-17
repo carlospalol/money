@@ -8,6 +8,8 @@ import collections
 import unittest
 import pickle
 
+import babel
+
 from money import Money, XMoney
 from money.exceptions import InvalidOperandType
 from money.exceptions import CurrencyMismatch
@@ -106,17 +108,26 @@ class FormattingMixin(object):
         self.assertEqual(self.money.format('de_DE', u'0.00 ¤'), u'-1234,57 $')
     
     def test_custom_format_decimals(self):
-        self.assertEqual(self.money.format('en_US', u'¤0.000'), u'-$1234.567')
-        self.assertEqual(self.money.format('en_US', u'¤0'), u'-$1235')
+        self.assertEqual(self.money.format('en_US', u'¤0.000', currency_digits=False), u'-$1234.567')
+        self.assertEqual(self.money.format('en_US', u'¤0', currency_digits=False), u'-$1235')
     
     def test_auto_format_locales(self):
-        self.assertEqual(self.money.format('en_US'), u'($1,234.57)')
+        self.assertEqual(self.money.format('en_US'), u'-$1,234.57')
         self.assertEqual(self.money.format('de_DE'), u'-1.234,57\xa0$')
-        self.assertEqual(self.money.format('es_CO'), u'-1.234,57\xa0US$')
+        self.assertEqual(self.money.format('es_CO'), u'-US$\xa01.234,57')
     
     def test_auto_format_locales_alias(self):
         self.assertEqual(self.money.format('en'), self.money.format('en_US'))
         self.assertEqual(self.money.format('de'), self.money.format('de_DE'))
+    
+    def test_auto_format_locale_numeric(self):
+        locale = babel.default_locale('LC_NUMERIC')
+        babel_formatted = babel.numbers.format_currency(self.money.amount, self.money.currency, locale=locale)
+        self.assertEqual(self.money.format(), babel_formatted)
+    
+    def test_auto_format(self):
+        babel_formatted = babel.numbers.format_currency(self.money.amount, self.money.currency)
+        self.assertEqual(self.money.format(), babel_formatted)
 
 
 class ParserMixin(object):

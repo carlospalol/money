@@ -3,6 +3,7 @@ Money classes
 """
 import decimal
 import re
+from distutils.version import StrictVersion
 
 from .exchange import xrates
 from .exceptions import (CurrencyMismatch, ExchangeRateNotFound,
@@ -12,12 +13,16 @@ from .exceptions import (CurrencyMismatch, ExchangeRateNotFound,
 __all__ = ['Money', 'XMoney']
 
 BABEL_AVAILABLE = False
+BABEL_VERSION = None
 REGEX_CURRENCY_CODE = re.compile("^[A-Z]{3}$")
+LC_NUMERIC = None
 
 try:
     import babel
     import babel.numbers
     BABEL_AVAILABLE = True
+    BABEL_VERSION = StrictVersion(babel.__version__)
+    LC_NUMERIC = babel.default_locale('LC_NUMERIC')
 except ImportError:
     pass
 
@@ -225,7 +230,8 @@ class Money(object):
         amount = self._amount * rate
         return self.__class__(amount, currency)
     
-    def format(self, locale=None, pattern=None):
+    def format(self, locale=LC_NUMERIC, pattern=None, currency_digits=True,
+               format_type='standard'):
         """
         Return a locale-aware, currency-formatted string.
         
@@ -252,13 +258,12 @@ class Money(object):
         http://www.unicode.org/reports/tr35/tr35-numbers.html
         """
         if BABEL_AVAILABLE:
-            if not locale:
-                locale = babel.default_locale('LC_NUMERIC')
-            locale = babel.Locale.parse(locale)
-            if not pattern:
-                pattern = locale.currency_formats.get(pattern)
-            pattern = babel.numbers.parse_pattern(pattern)
-            return pattern.apply(self._amount, locale, currency=self._currency)
+            if BABEL_VERSION < StrictVersion('2.2'):
+                raise Exception('Babel {} is unsupported. '
+                    'Please upgrade to 2.2 or higher.'.format(BABEL_VERSION))
+            return babel.numbers.format_currency(
+                self._amount, self._currency, format=pattern, locale=locale,
+                currency_digits=currency_digits, format_type=format_type)
         else:
             raise NotImplementedError("formatting requires Babel "
                                       "(https://pypi.python.org/pypi/Babel)")
