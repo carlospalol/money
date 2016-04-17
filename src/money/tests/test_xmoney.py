@@ -5,7 +5,6 @@ from decimal import Decimal
 import unittest
 
 from money import XMoney, xrates
-from money.money import BABEL_AVAILABLE
 from money.exceptions import CurrencyMismatch
 from .mixins import *
 
@@ -16,7 +15,6 @@ class TestXMoneyClass(ClassMixin, unittest.TestCase):
 class TestXMoneyRepresentations(RepresentationsMixin, unittest.TestCase):
     MoneyClass = XMoney
 
-@unittest.skipUnless(BABEL_AVAILABLE, "requires Babel")
 class TestXMoneyFormatting(FormattingMixin, unittest.TestCase):
     MoneyClass = XMoney
 
