@@ -7,7 +7,7 @@
 1.3.0-dev
 ---------
 
-+ Migrated to Babel 2.2 or higher (new CLDR and new API for ``babel.numbers.format_currency()``).
++ Migrated to Babel 2.2 or higher. New CLDR and new API for ``babel.numbers.format_currency()`` (reported by `chrisrossi <https://github.com/chrisrossi>`_).
 
 + Dropped support for Python 3.3
 
