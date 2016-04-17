@@ -3,6 +3,7 @@ Money classes
 """
 import decimal
 import re
+from distutils.version import StrictVersion
 
 from .exchange import xrates
 from .exceptions import CurrencyMismatch, ExchangeRateNotFound
@@ -11,12 +12,14 @@ from .exceptions import CurrencyMismatch, ExchangeRateNotFound
 __all__ = ['Money', 'XMoney']
 
 BABEL_AVAILABLE = False
+BABEL_VERSION = None
 REGEX_CURRENCY_CODE = re.compile("^[A-Z]{3}$")
 
 try:
     import babel
     import babel.numbers
     BABEL_AVAILABLE = True
+    BABEL_VERSION = StrictVersion(babel.__version__)
 except ImportError:
     pass
 
@@ -237,6 +240,10 @@ class Money(object):
         http://www.unicode.org/reports/tr35/tr35-numbers.html
         """
         if BABEL_AVAILABLE:
+            if BABEL_VERSION >= StrictVersion('2.2'):
+                raise Exception('Babel {} is unsupported. '
+                    'Please upgrade Money to 1.3 or higher.'.format(
+                    BABEL_VERSION))
             if not locale:
                 locale = babel.default_locale('LC_NUMERIC')
             locale = babel.Locale.parse(locale)
