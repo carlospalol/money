@@ -4,8 +4,8 @@
 1.3
 ===
 
-1.3.0-dev
----------
+1.3.0 (2016-04-17)
+------------------
 
 + Migrated to Babel 2.2 or higher. New CLDR and new API for ``babel.numbers.format_currency()`` (reported by `chrisrossi <https://github.com/chrisrossi>`_).
 

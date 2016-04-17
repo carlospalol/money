@@ -19,7 +19,7 @@ setup(
     description='Python Money Class',
     # long_description=DESCRIPTION,
     # RADAR: version
-    version='1.3.0-dev',
+    version='1.3.0',
     author='Carlos Palol',
     author_email='carlos.palol@awarepixel.com',
     url='https://github.com/carlospalol/money',

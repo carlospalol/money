@@ -7,7 +7,7 @@ Money class with optional CLDR-backed locale-aware formatting and an extensible 
 
 .. RADAR: version
 
-**This is version 1.3.0-dev**.
+**This is version 1.3.0**.
 
 :Development: https://github.com/carlospalol/money
 :Latest release: https://pypi.python.org/pypi/money/
