@@ -11,7 +11,7 @@ from .exceptions import (CurrencyMismatch, ExchangeRateNotFound,
                          InvalidOperandType)
 
 
-__all__ = ['Money', 'XMoney']
+__all__ = ['Money', 'XMoney', 'Single']
 
 BABEL_AVAILABLE = False
 BABEL_VERSION = None
@@ -317,8 +317,24 @@ class XMoney(Money):
         return super(XMoney, self).__divmod__(other)
 
 
+def Single(single):
+    """Money subclass bound to a single fixed currency.
 
+    Example:
 
+        >>> from money import Single
+        >>>
+        >>> class BTC(Single('BTC')):
+        ...    pass
+        ...
+        >>> BTC('0')
+        BTC 0
 
+    """
+    class SingleCurrency(Money):
+        def __init__(self, amount=0, currency=single):
+            if currency != single:
+                raise ValueError("invalid currency value: '{}', must be '{}'".format(currency, single))
+            super().__init__(amount, currency)
 
-
+    return SingleCurrency
