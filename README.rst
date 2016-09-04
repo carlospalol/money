@@ -12,7 +12,7 @@ Money class with optional CLDR-backed locale-aware formatting and an extensible 
 :Development: https://github.com/carlospalol/money
 :Latest release: https://pypi.python.org/pypi/money/
 
-This package is compatible with Python 2.7, 3.4, 3.5 (tested in 2.7.11, 3.4.4, 3.5.1), but there are important `Differences between Python versions`_. All code examples use Python 3.x.
+This package is compatible with Python 2.7, 3.4, 3.5, but there are important `Differences between Python versions`_. All code examples use Python 3.5.
 
 **Contents**
 
@@ -30,7 +30,7 @@ Install the latest release with:
 
     pip install money
 
-For locale-aware formatting, also install the latest version of `Babel <https://pypi.python.org/pypi/Babel>`_ (2.2 or higher required):
+For locale-aware formatting, also install the latest version of `Babel <https://pypi.python.org/pypi/Babel>`_ (2.2 or 2.3 required):
 
 ::
 
