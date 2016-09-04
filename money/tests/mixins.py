@@ -1,13 +1,19 @@
+# -*- coding: utf-8 -*-
 """
 Money unittests as mixins for Money and subclasses
 """
+# RADAR: Python2
+from __future__ import absolute_import
+
 import abc
 from decimal import Decimal
 import collections
 import unittest
 import pickle
-
 import babel
+
+# RADAR: Python2
+import money.six
 
 from money import Money, XMoney
 from money.exceptions import InvalidOperandType
@@ -90,30 +96,31 @@ class RepresentationsMixin(object):
         self.assertEqual(str(self.MoneyClass('1234.567', 'XXX')), 'XXX 1,234.57')
 
 
+# RADAR: Python2 (unicode strings u'')
 class FormattingMixin(object):
     def setUp(self):
         self.money = self.MoneyClass('-1234.567', 'USD')
     
     def test_custom_format_padding(self):
-        self.assertEqual(self.money.format('en_US', '¤000000.00'), '-$001234.57')
+        self.assertEqual(self.money.format('en_US', u'¤000000.00'), u'-$001234.57')
     
     def test_custom_format_custom_negative(self):
-        self.assertEqual(self.money.format('en_US', '¤#,##0.00;<¤#,##0.00>'), '<$1,234.57>')
+        self.assertEqual(self.money.format('en_US', u'¤#,##0.00;<¤#,##0.00>'), u'<$1,234.57>')
     
     def test_custom_format_grouping(self):
-        self.assertEqual(self.money.format('en_US', '¤#,##0.00'), '-$1,234.57')
-        self.assertEqual(self.money.format('de_DE', '#,##0.00 ¤'), '-1.234,57 $')
-        self.assertEqual(self.money.format('en_US', '¤0.00'), '-$1234.57')
-        self.assertEqual(self.money.format('de_DE', '0.00 ¤'), '-1234,57 $')
+        self.assertEqual(self.money.format('en_US', u'¤#,##0.00'), u'-$1,234.57')
+        self.assertEqual(self.money.format('de_DE', u'#,##0.00 ¤'), u'-1.234,57 $')
+        self.assertEqual(self.money.format('en_US', u'¤0.00'), u'-$1234.57')
+        self.assertEqual(self.money.format('de_DE', u'0.00 ¤'), u'-1234,57 $')
     
     def test_custom_format_decimals(self):
-        self.assertEqual(self.money.format('en_US', '¤0.000', currency_digits=False), '-$1234.567')
-        self.assertEqual(self.money.format('en_US', '¤0', currency_digits=False), '-$1235')
+        self.assertEqual(self.money.format('en_US', u'¤0.000', currency_digits=False), u'-$1234.567')
+        self.assertEqual(self.money.format('en_US', u'¤0', currency_digits=False), u'-$1235')
     
     def test_auto_format_locales(self):
-        self.assertEqual(self.money.format('en_US'), '-$1,234.57')
-        self.assertEqual(self.money.format('de_DE'), '-1.234,57\xa0$')
-        self.assertEqual(self.money.format('es_CO'), '-US$\xa01.234,57')
+        self.assertEqual(self.money.format('en_US'), u'-$1,234.57')
+        self.assertEqual(self.money.format('de_DE'), u'-1.234,57\xa0$')
+        self.assertEqual(self.money.format('es_CO'), u'-US$\xa01.234,57')
     
     def test_auto_format_locales_alias(self):
         self.assertEqual(self.money.format('en'), self.money.format('en_US'))
@@ -409,7 +416,16 @@ class NumericOperationsMixin(object):
         self.assertEqual(float(self.MoneyClass('-2.22', 'XXX')), -2.22)
         self.assertEqual(float(self.MoneyClass('2.22', 'XXX')), 2.22)
     
-    def test_round(self):
+    # RADAR: Python2
+    @unittest.skipIf(money.six.PY3, "Money round() behaviour is different between Python 2 and Python 3.")
+    def test_round_python2(self):
+        self.assertEqual(round(self.MoneyClass('-1.49', 'XXX')), -1.0)
+        self.assertEqual(round(self.MoneyClass('1.50', 'XXX')), 2.0)
+        self.assertEqual(round(self.MoneyClass('1.234', 'XXX'), 2), 1.23)
+    
+    # RADAR: Python2
+    @unittest.skipIf(money.six.PY2, "Money round() behaviour is different between Python 2 and Python 3.")
+    def test_round_python3(self):
         self.assertEqual(round(self.MoneyClass('-1.49', 'XXX')), self.MoneyClass('-1', 'XXX'))
         self.assertEqual(round(self.MoneyClass('1.50', 'XXX')), self.MoneyClass('2', 'XXX'))
         self.assertEqual(round(self.MoneyClass('1.234', 'XXX'), 2), self.MoneyClass('1.23', 'XXX'))

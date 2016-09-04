@@ -272,8 +272,6 @@ Contributions
 
 Contributions are welcome. You can use the `regular github mechanisms <https://help.github.com/>`_.
 
-To be forward-compatible, and given the small size of the package, Python 2.7 is supported in a different source "branch" at ``src-py2``.
-
 To test your changes you will need `tox <https://pypi.python.org/pypi/tox>`_ and python 2.7, 3.4, and 3.5. Simply cd to the package root (by setup.py) and run ``tox``.
 
 

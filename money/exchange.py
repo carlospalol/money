@@ -1,14 +1,23 @@
+# -*- coding: utf-8 -*-
 """
 Money exchange related classes and ``xrates`` API entry point.
 """
+# RADAR: Python2
+from __future__ import absolute_import
+
 import abc
 import decimal
 import importlib
 
+# RADAR: Python2
+import money.six
+
 from .exceptions import ExchangeBackendNotInstalled
 
 
-class BackendBase(metaclass=abc.ABCMeta):
+# RADAR: Python2
+@money.six.add_metaclass(abc.ABCMeta)
+class BackendBase(object):
     """Abstract base class API for exchange backends"""
     @property
     @abc.abstractmethod
@@ -55,19 +64,24 @@ class SimpleBackend(BackendBase):
         return self._rates.get(currency, None)
 
     def quotation(self, origin, target):
-        return super().quotation(origin, target)
+        return super(SimpleBackend, self).quotation(origin, target)
 
 
 class ExchangeRates(object):
     def __init__(self):
         self._backend = None
-
+    
+    # RADAR: Python2
+    def __nonzero__(self):
+        return self.__bool__()
+    
     def __bool__(self):
         return bool(self._backend)
 
     def install(self, backend='money.exchange.SimpleBackend'):
         """Install an exchange rates backend using a python path string"""
-        if isinstance(backend, str):
+        # RADAR: Python2
+        if isinstance(backend, money.six.string_types):
             path, name = backend.rsplit('.', 1)
             module = importlib.import_module(path)
             backend = getattr(module, name)()

@@ -1,6 +1,12 @@
 .. RADAR: version
 
 
+1.4
+===
+
++ Merged Python 2 and 3 sources.
+
+
 1.3
 ===
 
