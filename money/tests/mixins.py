@@ -67,7 +67,7 @@ class InstantiationMixin(object):
     
     def test_invalid_amount(self):
         with self.assertRaises(ValueError):
-            money = self.MoneyClass('twenty', 'XXX')
+            self.MoneyClass('twenty', 'XXX')
 
 
 class ClassMixin(object):
@@ -148,15 +148,15 @@ class ParserMixin(object):
     
     def test_loads_missing_currency(self):
         with self.assertRaises(ValueError):
-            money = self.MoneyClass.loads('2.99')
+            self.MoneyClass.loads('2.99')
     
     def test_loads_reversed_order(self):
         with self.assertRaises(ValueError):
-            money = self.MoneyClass.loads('2.99 XXX')
+            self.MoneyClass.loads('2.99 XXX')
     
     def test_loads_empty(self):
         with self.assertRaises(ValueError):
-            money = self.MoneyClass.loads('')
+            self.MoneyClass.loads('')
 
 
 class NumericOperationsMixin(object):

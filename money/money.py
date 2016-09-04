@@ -41,8 +41,6 @@ class Money(object):
         try:
             self._amount = decimal.Decimal(amount)
         except decimal.InvalidOperation:
-            raise ValueError("amount value could not be converted to "
-                             "Decimal(): '{}'".format(amount))
             # RADAR: Python2
             money.six.raise_from(ValueError("amount value could not be "
                 "converted to Decimal(): '{}'".format(amount)), None)

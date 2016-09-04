@@ -21,3 +21,5 @@ def load_tests(loader, tests, pattern):
         # Doc tests are Python 3.x
         return unittest.TestSuite()
     return doctest.DocFileSuite(*FILES)
+
+

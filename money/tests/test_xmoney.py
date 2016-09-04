@@ -89,7 +89,7 @@ class TestXMoneyLeftmostTypePrevails(mixins.LeftmostTypePrevailsMixin, unittest.
     def setUp(self):
         self.MoneyClass = XMoney
         self.money = self.MoneyClass('2.99', 'XXX')
-        self.MoneySubclass =  type('MoneySubclass', (self.MoneyClass,), {})
+        self.MoneySubclass = type('MoneySubclass', (self.MoneyClass,), {})
         self.other_money = self.MoneySubclass('2.99', 'XXX')
 
 
