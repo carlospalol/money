@@ -20,87 +20,93 @@ from money.exceptions import InvalidOperandType
 from money.exceptions import CurrencyMismatch
 
 
-class ClassMixin(object):
+class InstantiationMixin(object):
     def test_new_instance_int_amount(self):
-        self.assertIsInstance(self.MoneyClass(0, 'XXX'), self.MoneyClass)
-        self.assertIsInstance(self.MoneyClass(12345, 'XXX'), self.MoneyClass)
+        self.assertEqual(self.MoneyClass(0, 'XXX').amount, Decimal('0.00'))
+        self.assertEqual(self.MoneyClass(2, 'XXX').amount, Decimal('2.00'))
     
     def test_new_instance_decimal_amount(self):
-        self.assertIsInstance(self.MoneyClass(Decimal(12345), 'XXX'), self.MoneyClass)
+        self.assertEqual(self.MoneyClass(Decimal('0.00'), 'XXX').amount, Decimal('0.00'))
+        self.assertEqual(self.MoneyClass(Decimal('2.99'), 'XXX').amount, Decimal('2.99'))
     
     def test_new_instance_float_amount(self):
-        self.assertIsInstance(self.MoneyClass(12345.12345, 'XXX'), self.MoneyClass)
+        self.assertEqual(self.MoneyClass(0.0, 'XXX').amount, Decimal('0.00'))
+        self.assertAlmostEqual(self.MoneyClass(2.99, 'XXX').amount, Decimal('2.99'))
     
     def test_new_instance_str_amount(self):
-        self.assertIsInstance(self.MoneyClass('0', 'XXX'), self.MoneyClass)
-        self.assertIsInstance(self.MoneyClass('12345.12345', 'XXX'), self.MoneyClass)
+        self.assertEqual(self.MoneyClass('0', 'XXX').amount, Decimal('0.00'))
+        self.assertEqual(self.MoneyClass('2.99', 'XXX').amount, Decimal('2.99'))
+    
+    def test_invalid_currency_missing(self):
+        with self.assertRaises(ValueError):
+            self.MoneyClass('2.99')
     
     def test_invalid_currency_none(self):
         with self.assertRaises(ValueError):
-            money = self.MoneyClass('2.22', None)
+            self.MoneyClass('2.99', None)
     
     def test_invalid_currency_false(self):
         with self.assertRaises(ValueError):
-            money = self.MoneyClass('2.22', False)
+            self.MoneyClass('2.99', False)
     
     def test_invalid_currency_empty(self):
         with self.assertRaises(ValueError):
-            money = self.MoneyClass('2.22', '')
+            self.MoneyClass('2.99', '')
     
     def test_invalid_currency_code(self):
         with self.assertRaises(ValueError):
-            money = self.MoneyClass('2.22', 'XX')
+            self.MoneyClass('2.99', 'XX')
         with self.assertRaises(ValueError):
-            money = self.MoneyClass('2.22', '123')
+            self.MoneyClass('2.99', '123')
         with self.assertRaises(ValueError):
-            money = self.MoneyClass('2.22', 'xxx')
+            self.MoneyClass('2.99', 'xxx')
         with self.assertRaises(ValueError):
-            money = self.MoneyClass('2.22', '$')
+            self.MoneyClass('2.99', '$')
         with self.assertRaises(ValueError):
-            money = self.MoneyClass('2.22', 'US$')
+            self.MoneyClass('2.99', 'US$')
     
     def test_invalid_amount(self):
         with self.assertRaises(ValueError):
             money = self.MoneyClass('twenty', 'XXX')
+
+
+class ClassMixin(object):
+    def test_is_money(self):
+        self.assertIsInstance(self.money, Money)
     
     def test_immutable_by_convention(self):
-        money = self.MoneyClass('2', 'XXX')
         with self.assertRaises(AttributeError):
-            money.amount += 1
+            self.money.amount += 1
         with self.assertRaises(AttributeError):
-            money.currency = 'YYY'
+            self.money.currency = 'YYY'
     
     def test_hashable(self):
-        money = self.MoneyClass('2.22', 'XXX')
-        self.assertTrue(isinstance(money, collections.Hashable))
+        self.assertIsInstance(self.money, collections.Hashable)
     
     def test_hash_eq(self):
-        money = self.MoneyClass('2.22', 'XXX')
-        money_set = set([money, money])
+        money_set = set([self.money, self.money])
         self.assertEqual(len(money_set), 1)
     
     def test_hash_int(self):
-        money = self.MoneyClass('2.22', 'XXX')
-        self.assertEqual(type(hash(money)), int)
+        self.assertEqual(type(hash(self.money)), int)
     
     def test_pickable(self):
-        money = self.MoneyClass('2.22', 'XXX')
-        self.assertEqual(pickle.loads(pickle.dumps(money)), money)
+        self.assertEqual(pickle.loads(pickle.dumps(self.money)), self.money)
+    
+    def test_sqlalchemy_composite_values(self):
+        self.assertEqual((self.money.amount, self.money.currency), self.money.__composite_values__())
 
 
 class RepresentationsMixin(object):
     def test_repr(self):
-        self.assertEqual(repr(self.MoneyClass('1234.567', 'XXX')), 'XXX 1234.567')
+        self.assertEqual(repr(self.money), 'XXX 1234.567')
     
     def test_str(self):
-        self.assertEqual(str(self.MoneyClass('1234.567', 'XXX')), 'XXX 1,234.57')
+        self.assertEqual(str(self.money), 'XXX 1,234.57')
 
 
 # RADAR: Python2 (unicode strings u'')
 class FormattingMixin(object):
-    def setUp(self):
-        self.money = self.MoneyClass('-1234.567', 'USD')
-    
     def test_custom_format_padding(self):
         self.assertEqual(self.money.format('en_US', u'¤000000.00'), u'-$001234.57')
     
@@ -137,16 +143,16 @@ class FormattingMixin(object):
 
 
 class ParserMixin(object):
-    def test_loads_valid(self):
-        self.assertEqual(self.MoneyClass.loads('XXX 2.22'), self.MoneyClass('2.22', 'XXX'))
+    def test_loads_repr(self):
+        self.assertEqual(self.MoneyClass.loads('XXX 2.99'), self.MoneyClass('2.99', 'XXX'))
     
     def test_loads_missing_currency(self):
         with self.assertRaises(ValueError):
-            money = self.MoneyClass.loads('2.22')
+            money = self.MoneyClass.loads('2.99')
     
     def test_loads_reversed_order(self):
         with self.assertRaises(ValueError):
-            money = self.MoneyClass.loads('2.22 XXX')
+            money = self.MoneyClass.loads('2.99 XXX')
     
     def test_loads_empty(self):
         with self.assertRaises(ValueError):
@@ -155,8 +161,8 @@ class ParserMixin(object):
 
 class NumericOperationsMixin(object):
     def test_lt(self):
-        self.assertTrue(self.MoneyClass('2.219', 'XXX') < self.MoneyClass('2.22', 'XXX'))
-        self.assertTrue(self.MoneyClass('-2.22', 'XXX') < self.MoneyClass('2.22', 'XXX'))
+        self.assertTrue(self.MoneyClass('2.219', 'XXX') < self.MoneyClass('2.99', 'XXX'))
+        self.assertTrue(self.MoneyClass('-2.99', 'XXX') < self.MoneyClass('2.99', 'XXX'))
         self.assertFalse(self.MoneyClass('0', 'XXX') < self.MoneyClass('0', 'XXX'))
     
     def test_lt_works_only_with_money(self):
@@ -168,10 +174,10 @@ class NumericOperationsMixin(object):
             self.MoneyClass(2, 'AAA') < self.MoneyClass(2, 'BBB')
     
     def test_le(self):
-        self.assertTrue(self.MoneyClass('2.219', 'XXX') <= self.MoneyClass('2.22', 'XXX'))
-        self.assertTrue(self.MoneyClass('-2.22', 'XXX') <= self.MoneyClass('2.22', 'XXX'))
+        self.assertTrue(self.MoneyClass('2.219', 'XXX') <= self.MoneyClass('2.99', 'XXX'))
+        self.assertTrue(self.MoneyClass('-2.99', 'XXX') <= self.MoneyClass('2.99', 'XXX'))
         self.assertTrue(self.MoneyClass('0', 'XXX') <= self.MoneyClass('0', 'XXX'))
-        self.assertTrue(self.MoneyClass('2.220', 'XXX') <= self.MoneyClass('2.22', 'XXX'))
+        self.assertTrue(self.MoneyClass('2.990', 'XXX') <= self.MoneyClass('2.99', 'XXX'))
     
     def test_le_works_only_with_money(self):
         with self.assertRaises(InvalidOperandType):
@@ -185,15 +191,15 @@ class NumericOperationsMixin(object):
         self.assertEqual(self.MoneyClass('2', 'XXX'), self.MoneyClass('2', 'XXX'))
         self.assertEqual(hash(self.MoneyClass('2', 'XXX')), hash(self.MoneyClass('2', 'XXX')))
         
-        self.assertEqual(self.MoneyClass('2.22000', 'XXX'), self.MoneyClass('2.22', 'XXX'))
-        self.assertEqual(hash(self.MoneyClass('2.22000', 'XXX')), hash(self.MoneyClass('2.22', 'XXX')))
+        self.assertEqual(self.MoneyClass('2.99000', 'XXX'), self.MoneyClass('2.99', 'XXX'))
+        self.assertEqual(hash(self.MoneyClass('2.99000', 'XXX')), hash(self.MoneyClass('2.99', 'XXX')))
     
     def test_ne(self):
         self.assertNotEqual(self.MoneyClass('0', 'XXX'), self.MoneyClass('2', 'XXX'))
         self.assertNotEqual(hash(self.MoneyClass('0', 'XXX')), hash(self.MoneyClass('2', 'XXX')))
         
-        self.assertNotEqual(self.MoneyClass('2.22001', 'XXX'), self.MoneyClass('2.22', 'XXX'))
-        self.assertNotEqual(hash(self.MoneyClass('2.22001', 'XXX')), hash(self.MoneyClass('2.22', 'XXX')))
+        self.assertNotEqual(self.MoneyClass('2.99001', 'XXX'), self.MoneyClass('2.99', 'XXX'))
+        self.assertNotEqual(hash(self.MoneyClass('2.99001', 'XXX')), hash(self.MoneyClass('2.99', 'XXX')))
         
         self.assertNotEqual(self.MoneyClass('2', 'XXX'), self.MoneyClass('2', 'YYY'))
         self.assertNotEqual(hash(self.MoneyClass('2', 'XXX')), hash(self.MoneyClass('2', 'YYY')))
@@ -202,8 +208,8 @@ class NumericOperationsMixin(object):
         self.assertNotEqual(self.MoneyClass(0, 'XXX'), Decimal('0'))
     
     def test_gt(self):
-        self.assertTrue(self.MoneyClass('2.22', 'XXX') > self.MoneyClass('2.219', 'XXX'))
-        self.assertTrue(self.MoneyClass('2.22', 'XXX') > self.MoneyClass('-2.22', 'XXX'))
+        self.assertTrue(self.MoneyClass('2.99', 'XXX') > self.MoneyClass('2.219', 'XXX'))
+        self.assertTrue(self.MoneyClass('2.99', 'XXX') > self.MoneyClass('-2.99', 'XXX'))
         self.assertFalse(self.MoneyClass('0', 'XXX') > self.MoneyClass('0', 'XXX'))
     
     def test_gt_works_only_with_money(self):
@@ -215,9 +221,9 @@ class NumericOperationsMixin(object):
             self.MoneyClass(2, 'AAA') > self.MoneyClass(2, 'BBB')
     
     def test_ge(self):
-        self.assertTrue(self.MoneyClass('2.22', 'XXX') >= self.MoneyClass('2.219', 'XXX'))
-        self.assertTrue(self.MoneyClass('2.22', 'XXX') >= self.MoneyClass('-2.22', 'XXX'))
-        self.assertTrue(self.MoneyClass('2.22', 'XXX') >= self.MoneyClass('2.22', 'XXX'))
+        self.assertTrue(self.MoneyClass('2.99', 'XXX') >= self.MoneyClass('2.219', 'XXX'))
+        self.assertTrue(self.MoneyClass('2.99', 'XXX') >= self.MoneyClass('-2.99', 'XXX'))
+        self.assertTrue(self.MoneyClass('2.99', 'XXX') >= self.MoneyClass('2.99', 'XXX'))
     
     def test_ge_works_only_with_money(self):
         with self.assertRaises(InvalidOperandType):
@@ -228,7 +234,7 @@ class NumericOperationsMixin(object):
             self.MoneyClass(2, 'AAA') >= self.MoneyClass(2, 'BBB')
     
     def test_bool_true(self):
-        self.assertTrue(self.MoneyClass('2.22', 'XXX'))
+        self.assertTrue(self.MoneyClass('2.99', 'XXX'))
         self.assertTrue(self.MoneyClass('-1', 'XXX'))
     
     def test_bool_false(self):
@@ -303,12 +309,12 @@ class NumericOperationsMixin(object):
         self.assertEqual(result, self.MoneyClass('4', 'XXX'))
     
     def test_truediv_int(self):
-        result = self.MoneyClass('2.22', 'XXX') / 2
-        self.assertEqual(result, self.MoneyClass('1.11', 'XXX'))
+        result = self.MoneyClass('2.99', 'XXX') / 2
+        self.assertEqual(result, self.MoneyClass('1.495', 'XXX'))
     
     def test_truediv_decimal(self):
-        result = self.MoneyClass('2.22', 'XXX') / Decimal(2)
-        self.assertEqual(result, self.MoneyClass('1.11', 'XXX'))
+        result = self.MoneyClass('2.99', 'XXX') / Decimal(2)
+        self.assertEqual(result, self.MoneyClass('1.495', 'XXX'))
     
     def test_truediv_money(self):
         result = self.MoneyClass('2', 'XXX') / self.MoneyClass('2', 'XXX')
@@ -327,16 +333,16 @@ class NumericOperationsMixin(object):
             self.MoneyClass(2, 'XXX') / 0
     
     def test_floordiv_number(self):
-        result = self.MoneyClass('2.22', 'XXX') // 2
+        result = self.MoneyClass('2.99', 'XXX') // 2
         self.assertEqual(result, self.MoneyClass('1', 'XXX'))
     
     def test_floordiv_money(self):
-        result = self.MoneyClass('2.22', 'XXX') // self.MoneyClass('2', 'XXX')
+        result = self.MoneyClass('2.99', 'XXX') // self.MoneyClass('2', 'XXX')
         self.assertEqual(result, Decimal('1'))
     
     def test_floordiv_money_different_currency(self):
         with self.assertRaises(CurrencyMismatch):
-            self.MoneyClass('2.22', 'AAA') // self.MoneyClass('2', 'BBB')
+            self.MoneyClass('2.99', 'AAA') // self.MoneyClass('2', 'BBB')
     
     def test_floordiv_none(self):
         with self.assertRaises(TypeError):
@@ -347,12 +353,12 @@ class NumericOperationsMixin(object):
             self.MoneyClass(2, 'XXX') // 0
     
     def test_mod_number(self):
-        result = self.MoneyClass('2.22', 'XXX') % 2
-        self.assertEqual(result, self.MoneyClass('0.22', 'XXX'))
+        result = self.MoneyClass('2.99', 'XXX') % 2
+        self.assertEqual(result, self.MoneyClass('0.99', 'XXX'))
     
     def test_mod_money(self):
         with self.assertRaises(TypeError):
-            self.MoneyClass('2.22', 'XXX') % self.MoneyClass('2', 'XXX')
+            self.MoneyClass('2.99', 'XXX') % self.MoneyClass('2', 'XXX')
     
     def test_mod_none(self):
         with self.assertRaises(TypeError):
@@ -363,18 +369,18 @@ class NumericOperationsMixin(object):
             self.MoneyClass(2, 'XXX') % 0
     
     def test_divmod_number(self):
-        whole, remainder = divmod(self.MoneyClass('2.22', 'XXX'), 2)
+        whole, remainder = divmod(self.MoneyClass('2.99', 'XXX'), 2)
         self.assertEqual(whole, self.MoneyClass('1', 'XXX'))
-        self.assertEqual(remainder, self.MoneyClass('0.22', 'XXX'))
+        self.assertEqual(remainder, self.MoneyClass('0.99', 'XXX'))
     
     def test_divmod_money(self):
-        whole, remainder = divmod(self.MoneyClass('2.22', 'XXX'), self.MoneyClass('2', 'XXX'))
+        whole, remainder = divmod(self.MoneyClass('2.99', 'XXX'), self.MoneyClass('2', 'XXX'))
         self.assertEqual(whole, Decimal('1'))
-        self.assertEqual(remainder, Decimal('0.22'))
+        self.assertEqual(remainder, Decimal('0.99'))
     
     def test_divmod_money_different_currency(self):
         with self.assertRaises(CurrencyMismatch):
-            divmod(self.MoneyClass('2.22', 'AAA'), self.MoneyClass('2', 'BBB'))
+            divmod(self.MoneyClass('2.99', 'AAA'), self.MoneyClass('2', 'BBB'))
     
     def test_divmod_none(self):
         with self.assertRaises(TypeError):
@@ -397,24 +403,24 @@ class NumericOperationsMixin(object):
             self.MoneyClass(0, 'XXX') ** None
     
     def test_neg(self):
-        result = -self.MoneyClass('2.22', 'XXX')
-        self.assertEqual(result, self.MoneyClass('-2.22', 'XXX'))
+        result = -self.MoneyClass('2.99', 'XXX')
+        self.assertEqual(result, self.MoneyClass('-2.99', 'XXX'))
     
     def test_pos(self):
-        result = +self.MoneyClass('2.22', 'XXX')
-        self.assertEqual(result, self.MoneyClass('2.22', 'XXX'))
+        result = +self.MoneyClass('2.99', 'XXX')
+        self.assertEqual(result, self.MoneyClass('2.99', 'XXX'))
     
     def test_abs(self):
-        result = abs(self.MoneyClass('-2.22', 'XXX'))
-        self.assertEqual(result, self.MoneyClass('2.22', 'XXX'))
+        result = abs(self.MoneyClass('-2.99', 'XXX'))
+        self.assertEqual(result, self.MoneyClass('2.99', 'XXX'))
     
     def test_int(self):
-        self.assertEqual(int(self.MoneyClass('-2.22', 'XXX')), -2)
-        self.assertEqual(int(self.MoneyClass('2.22', 'XXX')), 2)
+        self.assertEqual(int(self.MoneyClass('-2.99', 'XXX')), -2)
+        self.assertEqual(int(self.MoneyClass('2.99', 'XXX')), 2)
     
     def test_float(self):
-        self.assertEqual(float(self.MoneyClass('-2.22', 'XXX')), -2.22)
-        self.assertEqual(float(self.MoneyClass('2.22', 'XXX')), 2.22)
+        self.assertEqual(float(self.MoneyClass('-2.99', 'XXX')), -2.99)
+        self.assertEqual(float(self.MoneyClass('2.99', 'XXX')), 2.99)
     
     # RADAR: Python2
     @unittest.skipIf(money.six.PY3, "Money round() behaviour is different between Python 2 and Python 3.")
@@ -432,9 +438,6 @@ class NumericOperationsMixin(object):
 
 
 class UnaryOperationsReturnNewMixin(object):
-    def setUp(self):
-        self.money = self.MoneyClass(2, 'XXX')
-    
     def test_pos(self):
         self.assertIsNot(+self.money, self.money)
     
@@ -443,36 +446,24 @@ class UnaryOperationsReturnNewMixin(object):
     
     def test_round(self):
         self.assertIsNot(round(self.money), self.money)
-    
-    def test_sqlalchemy_composite_values(self):
-        self.assertEqual((Decimal(2), 'XXX'), self.money.__composite_values__())
 
 
 class LeftmostTypePrevailsMixin(object):
-    def setUp(self):
-        if self.MoneyClass.__name__ == 'Money':
-            self.OtherClass = XMoney
-        if self.MoneyClass.__name__ == 'XMoney':
-            self.OtherClass = Money
-        
-        self.home = self.MoneyClass(2, 'XXX')
-        self.visitor = self.OtherClass(2, 'XXX')
-    
     def test_add(self):
-        result = self.home + self.visitor
+        result = self.money + self.other_money
         self.assertEqual(result.__class__, self.MoneyClass)
     
     def test_add_other(self):
-        result = self.visitor + self.home
-        self.assertEqual(result.__class__, self.OtherClass)
+        result = self.other_money + self.money
+        self.assertEqual(result.__class__, self.MoneySubclass)
     
     def test_sub(self):
-        result = self.home - self.visitor
+        result = self.money - self.other_money
         self.assertEqual(result.__class__, self.MoneyClass)
     
     def test_sub_other(self):
-        result = self.visitor - self.home
-        self.assertEqual(result.__class__, self.OtherClass)
+        result = self.other_money - self.money
+        self.assertEqual(result.__class__, self.MoneySubclass)
     
 
 

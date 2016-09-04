@@ -7,24 +7,35 @@ import unittest
 
 from money import XMoney, xrates
 from money.exceptions import CurrencyMismatch
-from .mixins import *
+from . import mixins
 
 
-class TestXMoneyClass(ClassMixin, unittest.TestCase):
-    MoneyClass = XMoney
+class TestXMoneyInstantiation(mixins.InstantiationMixin, unittest.TestCase):
+    def setUp(self):
+        self.MoneyClass = XMoney
 
-class TestXMoneyRepresentations(RepresentationsMixin, unittest.TestCase):
-    MoneyClass = XMoney
 
-class TestXMoneyFormatting(FormattingMixin, unittest.TestCase):
-    MoneyClass = XMoney
+class TestXMoneyClass(mixins.ClassMixin, unittest.TestCase):
+    def setUp(self):
+        self.money = XMoney('2.99', 'XXX')
 
-class TestXMoneyParser(ParserMixin, unittest.TestCase):
-    MoneyClass = XMoney
 
-class TestXMoneyNumericOperations(NumericOperationsMixin, unittest.TestCase):
-    MoneyClass = XMoney
-    
+class TestXMoneyRepresentations(mixins.RepresentationsMixin, unittest.TestCase):
+    def setUp(self):
+        self.money = XMoney('1234.567', 'XXX')
+
+
+class TestXMoneyFormatting(mixins.FormattingMixin, unittest.TestCase):
+    def setUp(self):
+        self.money = XMoney('-1234.567', 'USD')
+
+
+class TestXMoneyParser(mixins.ParserMixin, unittest.TestCase):
+    def setUp(self):
+        self.MoneyClass = XMoney
+
+
+class TestXMoneyNumericOperations(mixins.NumericOperationsMixin, unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         xrates.install('money.exchange.SimpleBackend')
@@ -37,6 +48,7 @@ class TestXMoneyNumericOperations(NumericOperationsMixin, unittest.TestCase):
         xrates.uninstall()
     
     def setUp(self):
+        self.MoneyClass = XMoney
         self.x = XMoney('10', 'XXX')
         self.a = XMoney('10', 'AAA')
         self.b = XMoney('10', 'BBB')
@@ -68,10 +80,16 @@ class TestXMoneyNumericOperations(NumericOperationsMixin, unittest.TestCase):
         self.assertEqual(remainder, Decimal('10'))
 
 
-class TestXMoneyUnaryOperationsReturnNew(UnaryOperationsReturnNewMixin, unittest.TestCase):
-    MoneyClass = XMoney
+class TestXMoneyUnaryOperationsReturnNew(mixins.UnaryOperationsReturnNewMixin, unittest.TestCase):
+    def setUp(self):
+        self.money = XMoney('2.99', 'XXX')
 
-class TestXMoneyLeftmostTypePrevails(LeftmostTypePrevailsMixin, unittest.TestCase):
-    MoneyClass = XMoney
+
+class TestXMoneyLeftmostTypePrevails(mixins.LeftmostTypePrevailsMixin, unittest.TestCase):
+    def setUp(self):
+        self.MoneyClass = XMoney
+        self.money = self.MoneyClass('2.99', 'XXX')
+        self.MoneySubclass =  type('MoneySubclass', (self.MoneyClass,), {})
+        self.other_money = self.MoneySubclass('2.99', 'XXX')
 
 
