@@ -113,7 +113,7 @@ Money objects are printed by default with en_US formatting and the currency code
     >>> str(m)
     'EUR 1,234.57'
 
-Use ``format(locale=LC_NUMERIC, pattern=None, currency_digits=True, format_type='standard')`` for locale-aware formatting with currency expansion. ``format()`` relies on ``babel.numbers.format_currency()``, and **requires Babel** 2.2 or higher to be installed.
+Use ``format(locale=LC_NUMERIC, pattern=None, currency_digits=True, format_type='standard')`` for locale-aware formatting with currency expansion. ``format()`` relies on ``babel.numbers.format_currency()``, and **requires Babel** to be installed.
 
 .. code:: python
 
