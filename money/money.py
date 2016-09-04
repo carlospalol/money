@@ -1,9 +1,16 @@
+# -*- coding: utf-8 -*-
 """
 Money classes
 """
+# RADAR: Python2
+from __future__ import absolute_import
+
 import decimal
 import re
 from distutils.version import StrictVersion
+
+# RADAR: Python2
+import money.six
 
 from .exchange import xrates
 from .exceptions import (CurrencyMismatch, ExchangeRateNotFound,
@@ -35,7 +42,10 @@ class Money(object):
             self._amount = decimal.Decimal(amount)
         except decimal.InvalidOperation:
             raise ValueError("amount value could not be converted to "
-                             "Decimal(): '{}'".format(amount)) from None
+                             "Decimal(): '{}'".format(amount))
+            # RADAR: Python2
+            money.six.raise_from(ValueError("amount value could not be "
+                "converted to Decimal(): '{}'".format(amount)), None)
         if currency in [None, False, '']:
             raise ValueError("invalid currency value: '{}'".format(currency))
         if not REGEX_CURRENCY_CODE.match(currency):
@@ -58,7 +68,14 @@ class Money(object):
         return "{} {}".format(self._currency, self._amount)
     
     def __str__(self):
-        return "{} {:,.2f}".format(self._currency, self._amount)
+        # RADAR: Python2
+        if money.six.PY2:
+            return self.__unicode__().encode('utf-8')
+        return self.__unicode__()
+    
+    # RADAR: Python2
+    def __unicode__(self):
+        return u"{} {:,.2f}".format(self._currency, self._amount)
     
     def __lt__(self, other):
         if not isinstance(other, Money):
@@ -101,6 +118,10 @@ class Money(object):
         else:
             return self._amount >= other.amount
     
+    # RADAR: Python2
+    def __nonzero__(self):
+        return self.__bool__()
+    
     def __bool__(self):
         """
         Considering Money a numeric type (on ``amount``):
@@ -141,6 +162,10 @@ class Money(object):
     
     def __rmul__(self, other):
         return self.__mul__(other)
+    
+    # RADAR: Python2
+    def __div__(self, other):
+        return self.__truediv__(other)
     
     def __truediv__(self, other):
         if isinstance(other, Money):
@@ -275,8 +300,9 @@ class Money(object):
             currency, amount = s.strip().split(' ')
             return cls(amount, currency)
         except ValueError as err:
-            raise ValueError("failed to parse string '{}': "
-                             "{}".format(s, err)) from None
+            # RADAR: Python2
+            money.six.raise_from(ValueError("failed to parse string "
+                " '{}': {}".format(s, err)), None)
 
 
 class XMoney(Money):
@@ -284,27 +310,33 @@ class XMoney(Money):
     def __add__(self, other):
         if isinstance(other, Money):
             other = other.to(self._currency)
-        return super().__add__(other)
+        return super(XMoney, self).__add__(other)
     
     def __sub__(self, other):
         if isinstance(other, Money):
             other = other.to(self._currency)
-        return super().__sub__(other)
+        return super(XMoney, self).__sub__(other)
+    
+    # RADAR: Python2
+    def __div__(self, other):
+        if isinstance(other, Money):
+            other = other.to(self._currency)
+        return super(XMoney, self).__div__(other)
     
     def __truediv__(self, other):
         if isinstance(other, Money):
             other = other.to(self._currency)
-        return super().__truediv__(other)
+        return super(XMoney, self).__truediv__(other)
     
     def __floordiv__(self, other):
         if isinstance(other, Money):
             other = other.to(self._currency)
-        return super().__floordiv__(other)
+        return super(XMoney, self).__floordiv__(other)
     
     def __divmod__(self, other):
         if isinstance(other, Money):
             other = other.to(self._currency)
-        return super().__divmod__(other)
+        return super(XMoney, self).__divmod__(other)
 
 
 

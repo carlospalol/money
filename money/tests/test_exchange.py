@@ -1,9 +1,13 @@
+# -*- coding: utf-8 -*-
 """
 Money exchange unittests
 """
 import abc
 from decimal import Decimal
 import unittest
+
+# RADAR: Python2
+import money.six
 
 from money import Money, XMoney, xrates
 from money.exchange import SimpleBackend
@@ -72,7 +76,9 @@ class TestExchangeRatesSetup(unittest.TestCase):
         self.assertEqual(another.rate('AAA'), Decimal('100'))
 
 
-class BackendTestBase(metaclass=abc.ABCMeta):
+# RADAR: Python2
+@money.six.add_metaclass(abc.ABCMeta)
+class BackendTestBase(object):
     @abc.abstractmethod
     def test_base_property(self):
         pass
