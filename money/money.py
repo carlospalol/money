@@ -6,6 +6,7 @@ Money classes
 from __future__ import absolute_import
 
 import decimal
+from numbers import Number
 import re
 from distutils.version import StrictVersion
 
@@ -33,6 +34,11 @@ try:
 except ImportError:
     pass
 
+def is_numeric_and_zero(value):
+    if isinstance(value, Number):
+        return value == 0
+    else:
+        return False
 
 class Money(object):
     """Money class with a decimal amount and a currency"""
@@ -76,7 +82,9 @@ class Money(object):
         return u"{} {:,.2f}".format(self._currency, self._amount)
     
     def __lt__(self, other):
-        if not isinstance(other, Money):
+        if is_numeric_and_zero(other):
+            return self._amount < 0
+        elif not isinstance(other, Money):
             raise InvalidOperandType(other, '<')
         elif other.currency != self._currency:
             raise CurrencyMismatch(self._currency, other.currency, '<')
@@ -84,7 +92,9 @@ class Money(object):
             return self._amount < other.amount
     
     def __le__(self, other):
-        if not isinstance(other, Money):
+        if is_numeric_and_zero(other):
+            return self._amount <= 0
+        elif not isinstance(other, Money):
             raise InvalidOperandType(other, '<=')
         elif other.currency != self._currency:
             raise CurrencyMismatch(self._currency, other.currency, '<=')
@@ -92,7 +102,9 @@ class Money(object):
             return self._amount <= other.amount
     
     def __eq__(self, other):
-        if isinstance(other, Money):
+        if is_numeric_and_zero(other):
+            return self._amount == 0
+        elif isinstance(other, Money):
             return ((self._amount == other.amount) and
                     (self._currency == other.currency))
         return False
@@ -101,7 +113,9 @@ class Money(object):
         return not self == other
     
     def __gt__(self, other):
-        if not isinstance(other, Money):
+        if is_numeric_and_zero(other):
+            return self._amount > 0
+        elif not isinstance(other, Money):
             raise InvalidOperandType(other, '>')
         elif other.currency != self._currency:
             raise CurrencyMismatch(self._currency, other.currency, '>')
@@ -109,7 +123,9 @@ class Money(object):
             return self._amount > other.amount
     
     def __ge__(self, other):
-        if not isinstance(other, Money):
+        if is_numeric_and_zero(other):
+            return self._amount >= 0
+        elif not isinstance(other, Money):
             raise InvalidOperandType(other, '>=')
         elif other.currency != self._currency:
             raise CurrencyMismatch(self._currency, other.currency, '>=')
