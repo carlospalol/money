@@ -28,12 +28,14 @@
     >>> m = Money(2, 'USD')
     
     # old code
-    >>> m > 0
+    >>> m > 1
     (raises InvalidOperandType)
     
     # 1.3.x
-    >>> m.amount > 0
+    >>> m.amount > Money(1, 'USD')
     True
+
++ '0' is consider a valid money amount for math and comparison.
 
 
 1.2
