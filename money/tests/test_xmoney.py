@@ -79,6 +79,21 @@ class TestXMoneyNumericOperations(mixins.NumericOperationsMixin, unittest.TestCa
         self.assertEqual(whole, Decimal('0'))
         self.assertEqual(remainder, Decimal('10'))
 
+    def test_gte_different_currency(self):
+        assert self.a >= self.b
+        
+    def test_gt_different_currency(self):
+        assert self.a > self.b
+
+    def test_lt_different_currency(self):
+        assert self.b < self.a
+        
+    def test_lte_different_currency(self):
+        assert self.b <= self.a
+        
+    def test_ne_different_currency(self):
+        assert self.a != self.b
+        
 
 class TestXMoneyUnaryOperationsReturnNew(mixins.UnaryOperationsReturnNewMixin, unittest.TestCase):
     def setUp(self):
