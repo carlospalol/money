@@ -169,10 +169,6 @@ class NumericOperationsMixin(object):
         with self.assertRaises(InvalidOperandType):
             self.MoneyClass(0, 'XXX') < Decimal('0')
     
-    def test_lt_money_different_currency(self):
-        with self.assertRaises(CurrencyMismatch):
-            self.MoneyClass(2, 'AAA') < self.MoneyClass(2, 'BBB')
-    
     def test_le(self):
         self.assertTrue(self.MoneyClass('2.219', 'XXX') <= self.MoneyClass('2.99', 'XXX'))
         self.assertTrue(self.MoneyClass('-2.99', 'XXX') <= self.MoneyClass('2.99', 'XXX'))
@@ -182,11 +178,7 @@ class NumericOperationsMixin(object):
     def test_le_works_only_with_money(self):
         with self.assertRaises(InvalidOperandType):
             self.MoneyClass(0, 'XXX') <= Decimal('0')
-    
-    def test_le_money_different_currency(self):
-        with self.assertRaises(CurrencyMismatch):
-            self.MoneyClass(2, 'AAA') <= self.MoneyClass(2, 'BBB')
-    
+        
     def test_eq(self):
         self.assertEqual(self.MoneyClass('2', 'XXX'), self.MoneyClass('2', 'XXX'))
         self.assertEqual(hash(self.MoneyClass('2', 'XXX')), hash(self.MoneyClass('2', 'XXX')))
@@ -215,11 +207,7 @@ class NumericOperationsMixin(object):
     def test_gt_works_only_with_money(self):
         with self.assertRaises(InvalidOperandType):
             self.MoneyClass(0, 'XXX') > Decimal('0')
-    
-    def test_gt_money_different_currency(self):
-        with self.assertRaises(CurrencyMismatch):
-            self.MoneyClass(2, 'AAA') > self.MoneyClass(2, 'BBB')
-    
+        
     def test_ge(self):
         self.assertTrue(self.MoneyClass('2.99', 'XXX') >= self.MoneyClass('2.219', 'XXX'))
         self.assertTrue(self.MoneyClass('2.99', 'XXX') >= self.MoneyClass('-2.99', 'XXX'))
@@ -228,10 +216,6 @@ class NumericOperationsMixin(object):
     def test_ge_works_only_with_money(self):
         with self.assertRaises(InvalidOperandType):
             self.MoneyClass(0, 'XXX') >= Decimal('0')
-    
-    def test_ge_money_different_currency(self):
-        with self.assertRaises(CurrencyMismatch):
-            self.MoneyClass(2, 'AAA') >= self.MoneyClass(2, 'BBB')
     
     def test_bool_true(self):
         self.assertTrue(self.MoneyClass('2.99', 'XXX'))

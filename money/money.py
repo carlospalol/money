@@ -336,9 +336,22 @@ class XMoney(Money):
             other = other.to(self._currency)
         return super(XMoney, self).__divmod__(other)
 
+    def __lt__(self, other):
+        if isinstance(other, Money):
+            other = other.to(self._currency)
+        return super(XMoney, self).__lt__(other)
+    
+    def __le__(self, other):
+        if isinstance(other, Money):
+            other = other.to(self._currency)
+        return super(XMoney, self).__le__(other)
+    
+    def __ge__(self, other):
+        if isinstance(other, Money):
+            other = other.to(self._currency)
+        return super(XMoney, self).__ge__(other)
 
-
-
-
-
-
+    def __gt__(self, other):
+        if isinstance(other, Money):
+            other = other.to(self._currency)
+        return super(XMoney, self).__gt__(other)

@@ -6,6 +6,7 @@ import unittest
 
 from money import Money
 from . import mixins
+from money.exceptions import CurrencyMismatch
 
 
 class TestMoneyInstantiation(mixins.InstantiationMixin, unittest.TestCase):
@@ -36,7 +37,23 @@ class TestMoneyParser(mixins.ParserMixin, unittest.TestCase):
 class TestMoneyNumericOperations(mixins.NumericOperationsMixin, unittest.TestCase):
     def setUp(self):
         self.MoneyClass = Money
+        
+    def test_lt_money_different_currency(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.MoneyClass(2, 'AAA') < self.MoneyClass(2, 'BBB')
+    
+    def test_le_money_different_currency(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.MoneyClass(2, 'AAA') <= self.MoneyClass(2, 'BBB')
 
+    def test_gt_money_different_currency(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.MoneyClass(2, 'AAA') > self.MoneyClass(2, 'BBB')
+            
+    def test_ge_money_different_currency(self):
+        with self.assertRaises(CurrencyMismatch):
+            self.MoneyClass(2, 'AAA') >= self.MoneyClass(2, 'BBB')
+    
 
 class TestMoneyUnaryOperationsReturnNew(mixins.UnaryOperationsReturnNewMixin, unittest.TestCase):
     def setUp(self):
