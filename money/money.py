@@ -7,7 +7,6 @@ from __future__ import absolute_import
 
 import decimal
 import re
-from distutils.version import StrictVersion
 
 # RADAR: Python2
 import money.six
@@ -25,10 +24,19 @@ REGEX_CURRENCY_CODE = re.compile("^[A-Z]{3}$")
 LC_NUMERIC = None
 
 try:
+    from packaging import version
+    def make_version(v):
+        return version.parse(v)
+except ImportError:
+    from distutils.version import StrictVersion
+    def make_version(v):
+        return StrictVersion(v)
+
+try:
     import babel
     import babel.numbers
     BABEL_AVAILABLE = True
-    BABEL_VERSION = StrictVersion(babel.__version__)
+    BABEL_VERSION = make_version(babel.__version__)
     LC_NUMERIC = babel.default_locale('LC_NUMERIC')
 except ImportError:
     pass
@@ -281,7 +289,7 @@ class Money(object):
         http://www.unicode.org/reports/tr35/tr35-numbers.html
         """
         if BABEL_AVAILABLE:
-            if BABEL_VERSION < StrictVersion('2.2'):
+            if BABEL_VERSION < make_version('2.2'):
                 raise Exception('Babel {} is unsupported. '
                     'Please upgrade to 2.2 or higher.'.format(BABEL_VERSION))
             return babel.numbers.format_currency(
