@@ -44,7 +44,7 @@ except ImportError:
 
 class Money(object):
     """Money class with a decimal amount and a currency"""
-    
+
     def __init__(self, amount="0", currency=None):
         try:
             self._amount = decimal.Decimal(amount)
@@ -58,31 +58,31 @@ class Money(object):
             raise ValueError("currency not in ISO 4217 format: "
                              "'{}'".format(currency))
         self._currency = currency
-    
+
     @property
     def amount(self):
         return self._amount
-    
+
     @property
     def currency(self):
         return self._currency
-    
+
     def __hash__(self):
         return hash((self._amount, self._currency))
-    
+
     def __repr__(self):
         return "{} {}".format(self._currency, self._amount)
-    
+
     def __str__(self):
         # RADAR: Python2
         if money.six.PY2:
             return self.__unicode__().encode('utf-8')
         return self.__unicode__()
-    
+
     # RADAR: Python2
     def __unicode__(self):
         return u"{} {:,.2f}".format(self._currency, self._amount)
-    
+
     def __lt__(self, other):
         if not isinstance(other, Money):
             raise InvalidOperandType(other, '<')
@@ -90,7 +90,7 @@ class Money(object):
             raise CurrencyMismatch(self._currency, other.currency, '<')
         else:
             return self._amount < other.amount
-    
+
     def __le__(self, other):
         if not isinstance(other, Money):
             raise InvalidOperandType(other, '<=')
@@ -98,16 +98,16 @@ class Money(object):
             raise CurrencyMismatch(self._currency, other.currency, '<=')
         else:
             return self._amount <= other.amount
-    
+
     def __eq__(self, other):
         if isinstance(other, Money):
             return ((self._amount == other.amount) and
                     (self._currency == other.currency))
         return False
-    
+
     def __ne__(self, other):
         return not self == other
-    
+
     def __gt__(self, other):
         if not isinstance(other, Money):
             raise InvalidOperandType(other, '>')
@@ -115,7 +115,7 @@ class Money(object):
             raise CurrencyMismatch(self._currency, other.currency, '>')
         else:
             return self._amount > other.amount
-    
+
     def __ge__(self, other):
         if not isinstance(other, Money):
             raise InvalidOperandType(other, '>=')
@@ -123,20 +123,20 @@ class Money(object):
             raise CurrencyMismatch(self._currency, other.currency, '>=')
         else:
             return self._amount >= other.amount
-    
+
     # RADAR: Python2
     def __nonzero__(self):
         return self.__bool__()
-    
+
     def __bool__(self):
         """
         Considering Money a numeric type (on ``amount``):
-        
+
         bool(Money(2, 'XXX')) --> True
         bool(Money(0, 'XXX')) --> False
         """
         return bool(self._amount)
-    
+
     def __add__(self, other):
         if isinstance(other, Money):
             if other.currency != self._currency:
@@ -144,10 +144,10 @@ class Money(object):
             other = other.amount
         amount = self._amount + other
         return self.__class__(amount, self._currency)
-    
+
     def __radd__(self, other):
         return self.__add__(other)
-    
+
     def __sub__(self, other):
         if isinstance(other, Money):
             if other.currency != self._currency:
@@ -155,24 +155,24 @@ class Money(object):
             other = other.amount
         amount = self._amount - other
         return self.__class__(amount, self._currency)
-    
+
     def __rsub__(self, other):
         return (-self).__add__(other)
-    
+
     def __mul__(self, other):
         if isinstance(other, Money):
             raise TypeError("multiplication is unsupported between "
                             "two money objects")
         amount = self._amount * other
         return self.__class__(amount, self._currency)
-    
+
     def __rmul__(self, other):
         return self.__mul__(other)
-    
+
     # RADAR: Python2
     def __div__(self, other):
         return self.__truediv__(other)
-    
+
     def __truediv__(self, other):
         if isinstance(other, Money):
             if other.currency != self._currency:
@@ -185,7 +185,7 @@ class Money(object):
                 raise ZeroDivisionError()
             amount = self._amount / other
             return self.__class__(amount, self._currency)
-    
+
     def __floordiv__(self, other):
         if isinstance(other, Money):
             if other.currency != self._currency:
@@ -198,7 +198,7 @@ class Money(object):
                 raise ZeroDivisionError()
             amount = self._amount // other
             return self.__class__(amount, self._currency)
-    
+
     def __mod__(self, other):
         if isinstance(other, Money):
             raise TypeError("modulo is unsupported between two '{}' "
@@ -207,7 +207,7 @@ class Money(object):
             raise ZeroDivisionError()
         amount = self._amount % other
         return self.__class__(amount, self._currency)
-    
+
     def __divmod__(self, other):
         if isinstance(other, Money):
             if other.currency != self._currency:
@@ -221,35 +221,35 @@ class Money(object):
             whole, remainder = divmod(self._amount, other)
             return (self.__class__(whole, self._currency),
                     self.__class__(remainder, self._currency))
-    
+
     def __pow__(self, other):
         if isinstance(other, Money):
             raise TypeError("power operator is unsupported between two '{}' "
                             "objects".format(self.__class__.__name__))
         amount = self._amount ** other
         return self.__class__(amount, self._currency)
-    
+
     def __neg__(self):
         return self.__class__(-self._amount, self._currency)
-    
+
     def __pos__(self):
         return self.__class__(+self._amount, self._currency)
-    
+
     def __abs__(self):
         return self.__class__(abs(self._amount), self._currency)
-        
+
     def __int__(self):
         return int(self._amount)
-    
+
     def __float__(self):
         return float(self._amount)
-    
+
     def __round__(self, ndigits=0):
         return self.__class__(round(self._amount, ndigits), self._currency)
-    
+
     def __composite_values__(self):
         return self._amount, self._currency
-    
+
     def to(self, currency):
         """Return equivalent money object in another currency"""
         if currency == self._currency:
@@ -260,21 +260,21 @@ class Money(object):
                                          self._currency, currency)
         amount = self._amount * rate
         return self.__class__(amount, currency)
-    
+
     def format(self, locale=LC_NUMERIC, pattern=None, currency_digits=True,
                format_type='standard'):
         """
         Return a locale-aware, currency-formatted string.
-        
+
         This method emulates babel.numbers.format_currency().
-        
+
         A specific locale identifier (language[_territory]) can be passed,
         otherwise the system's default locale will be used. A custom
         formatting pattern of the form "¤#,##0.00;(¤#,##0.00)"
         (positive[;negative]) can also be passed, otherwise it will be
         determined from the locale and the CLDR (Unicode Common Locale Data
         Repository) included with Babel.
-        
+
         >>> m = Money('1234.567', 'EUR')
         >>> m.format() # assuming the system's locale is 'en_US'
         €1,234.57
@@ -284,7 +284,7 @@ class Money(object):
         1.235 €
         >>> m.format(pattern='#,##0.00 ¤¤¤') # Default locale, full name
         1,235.57 euro
-        
+
         Learn more about this formatting syntaxis at:
         http://www.unicode.org/reports/tr35/tr35-numbers.html
         """
@@ -298,7 +298,7 @@ class Money(object):
         else:
             raise NotImplementedError("formatting requires Babel "
                                       "(https://pypi.python.org/pypi/Babel)")
-    
+
     @classmethod
     def loads(cls, s):
         """Parse from a string representation (repr)"""
@@ -317,28 +317,28 @@ class XMoney(Money):
         if isinstance(other, Money):
             other = other.to(self._currency)
         return super(XMoney, self).__add__(other)
-    
+
     def __sub__(self, other):
         if isinstance(other, Money):
             other = other.to(self._currency)
         return super(XMoney, self).__sub__(other)
-    
+
     # RADAR: Python2
     def __div__(self, other):
         if isinstance(other, Money):
             other = other.to(self._currency)
         return super(XMoney, self).__div__(other)
-    
+
     def __truediv__(self, other):
         if isinstance(other, Money):
             other = other.to(self._currency)
         return super(XMoney, self).__truediv__(other)
-    
+
     def __floordiv__(self, other):
         if isinstance(other, Money):
             other = other.to(self._currency)
         return super(XMoney, self).__floordiv__(other)
-    
+
     def __divmod__(self, other):
         if isinstance(other, Money):
             other = other.to(self._currency)

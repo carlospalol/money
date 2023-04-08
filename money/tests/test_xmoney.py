@@ -42,11 +42,11 @@ class TestXMoneyNumericOperations(mixins.NumericOperationsMixin, unittest.TestCa
         xrates.base = 'XXX'
         xrates.setrate('AAA', Decimal('2'))
         xrates.setrate('BBB', Decimal('8'))
-    
+
     @classmethod
     def tearDownClass(cls):
         xrates.uninstall()
-    
+
     def setUp(self):
         self.MoneyClass = XMoney
         self.x = XMoney('10', 'XXX')
@@ -54,23 +54,23 @@ class TestXMoneyNumericOperations(mixins.NumericOperationsMixin, unittest.TestCa
         self.b = XMoney('10', 'BBB')
         self.ax = XMoney('20', 'AAA')
         self.bx = XMoney('80', 'BBB')
-    
+
     def test_add_money_different_currency(self):
         self.assertEqual(self.a + self.b, XMoney('12.5', 'AAA'))
         self.assertEqual(self.b + self.a, XMoney('50', 'BBB'))
-    
+
     def test_sub_money_different_currency(self):
         self.assertEqual(self.a - self.b, XMoney('7.5', 'AAA'))
         self.assertEqual(self.b - self.a, XMoney('-30', 'BBB'))
-    
+
     def test_truediv_money_different_currency(self):
         self.assertEqual(self.a / self.b, Decimal('4'))
         self.assertEqual(self.b / self.a, Decimal('0.25'))
-    
+
     def test_floordiv_money_different_currency(self):
         self.assertEqual(self.a // self.b, Decimal('4'))
         self.assertEqual(self.b // self.a, Decimal('0'))
-    
+
     def test_divmod_money_different_currency(self):
         whole, remainder = divmod(self.a, self.b)
         self.assertEqual(whole, Decimal('4'))

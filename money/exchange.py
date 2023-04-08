@@ -70,11 +70,11 @@ class SimpleBackend(BackendBase):
 class ExchangeRates(object):
     def __init__(self):
         self._backend = None
-    
+
     # RADAR: Python2
     def __nonzero__(self):
         return self.__bool__()
-    
+
     def __bool__(self):
         return bool(self._backend)
 
