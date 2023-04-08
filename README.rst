@@ -121,7 +121,7 @@ Use ``format(locale=LC_NUMERIC, pattern=None, currency_digits=True, format_type=
     >>> m.format('en_US')
     '$1,234.57'
     >>> m.format('es_ES')
-    '1.234,57\xa0$'
+    '1.234,57\xa0US$'
 
 The character ``\xa0`` is an unicode non-breaking space. If no locale is passed, Babel will use your system's locale. You can also provide a specific pattern to format():
 
