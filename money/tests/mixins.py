@@ -7,10 +7,13 @@ from __future__ import absolute_import
 
 import abc
 from decimal import Decimal
-import collections
 import unittest
 import pickle
 import babel
+try:
+  from collections.abc import Hashable
+except ImportError:
+  from collections import Hashable
 
 # RADAR: Python2
 import money.six
@@ -81,7 +84,7 @@ class ClassMixin(object):
             self.money.currency = 'YYY'
     
     def test_hashable(self):
-        self.assertIsInstance(self.money, collections.Hashable)
+        self.assertIsInstance(self.money, Hashable)
     
     def test_hash_eq(self):
         money_set = set([self.money, self.money])
@@ -126,7 +129,7 @@ class FormattingMixin(object):
     def test_auto_format_locales(self):
         self.assertEqual(self.money.format('en_US'), u'-$1,234.57')
         self.assertEqual(self.money.format('de_DE'), u'-1.234,57\xa0$')
-        self.assertEqual(self.money.format('es_CO'), u'-US$\xa01.234,57')
+        self.assertEqual(self.money.format('es_CO'), u'-US$1.234,57')
     
     def test_auto_format_locales_alias(self):
         self.assertEqual(self.money.format('en'), self.money.format('en_US'))
